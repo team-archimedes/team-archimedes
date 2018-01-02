@@ -1,6 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
+import NegativeTweets from './negativeTweets.jsx';
+import PositiveTweets from './positiveTweets.jsx';
+import GraphDisplay from './GraphDisplay.jsx';
+
 // import AnyComponent from './components/filename.jsx'
 
 class App extends React.Component {
@@ -11,8 +15,19 @@ class App extends React.Component {
   	}
   }
 
+  getAllTweets() {
+    
+  }
+
   render () {
-  	return (<div>Hello World</div>)
+  	return (
+
+      <div>What the Flock?
+        <NegativeTweets/>
+        <PositiveTweets/>
+        <GraphDisplay/>
+      </div>
+    )
   }
 }
 
