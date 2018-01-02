@@ -1,13 +1,13 @@
 {
-  "name": "react-starter",
+  "name": "Greenfield",
   "version": "1.0.0",
-  "description": "React Starter",
+  "description": "Greenfield Project",
   "main": "index.js",
   "scripts": {
     "react-dev": "webpack -d --watch",
     "server-dev": "nodemon server/index.js"
   },
-  "author": "Aaron Chan",
+  "author": "Aaron Chan / Team Archimedes",
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.23.1",
