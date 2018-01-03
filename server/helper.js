@@ -34,4 +34,4 @@ module.exports.getTweet = (st, cb) => {
 	})
 }
 
-exports.getTweet('trump', (data) => {console.log(data)})
+// exports.getTweet('trump', (data) => {console.log(data)})
