@@ -17,3 +17,8 @@ module.exports.getTweet = (st, cb) => {
 		cb(data)
 	})
 }
+<<<<<<< HEAD
+=======
+
+// exports.getTweet('trump', (data) => {console.log(data)})
+>>>>>>> added a bunch of stuff to the package.json folder in regards to styling
