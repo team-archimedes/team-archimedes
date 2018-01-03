@@ -21,7 +21,7 @@ class App extends React.Component {
   constructor(props) {
   	super(props)
   	this.state = {
-      tweets: ["Fuck", "fuck", "fuck"],
+      tweets: [],
       average: 0
   	}
     this.getAverage = this.getAverage.bind(this)
@@ -29,32 +29,32 @@ class App extends React.Component {
 
   getAllTweets(term) {
     console.log('searched ', term)
-    axios.post('/search', {searchTerm: term}).then((res) => console.log("res ",res.data))
+    axios.post('/search', {searchTerm: term}).then((res) => {
+      console.log("res ", res.data);
+      this.setState({
+        tweets: res.data
+      });
+      this.getAverage(this.state.tweets);
+    });
   }
 
   getAverage(tweets) {
-    // var messages = this.state.tweets;
     var count = 0;
 
-    this.state.tweets.map((message) => {
-      var score = sentiment(message).score;
-      console.log('score ', score)
+    tweets.map((message) => {
+      var score = sentiment(message.tweetBody).score;
       count+=score;
     });
-    var newAverage = count/this.state.tweets.length;
-    console.log('average in getAverage ', newAverage)
-
+    var newAverage = count/tweets.length;
     this.setState({
       average: newAverage
-    })
+    });
 
     console.log('new average ', this.state.average)
   }
 
   componentDidMount() {
-    this.getAverage(this.state.tweets);
-    console.log('average ', this.state.average)
-    console.log(sentiment("manik and jess are fucking gods"));
+    this.getAllTweets('pizza');
   }
 
   render () {
