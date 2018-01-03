@@ -1,18 +1,63 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
-// import AnyComponent from './components/filename.jsx'
+import NegativeTweets from './negativeTweets.jsx';
+import PositiveTweets from './positiveTweets.jsx';
+import GraphDisplay from './GraphDisplay.jsx';
+import Search from './Search.jsx'
+import axios from 'axios';
+import bodyParser from 'body-parser';
+import sentiment from 'sentiment';
 
 class App extends React.Component {
   constructor(props) {
   	super(props)
   	this.state = {
-      tweets: []
+      tweets: ["Fuck", "fuck", "fuck"],
+      average: 0
   	}
+    this.getAverage = this.getAverage.bind(this)
+  }
+
+  getAllTweets(term) {
+    console.log('searched ', term)
+    axios.post('/search', {searchTerm: term}).then((res) => console.log("res ",res.data))
+  }
+
+  getAverage(tweets) {
+    // var messages = this.state.tweets;
+    var count = 0;
+
+    this.state.tweets.map((message) => {
+      var score = sentiment(message).score;
+      console.log('score ', score)
+      count+=score;
+    });
+    var newAverage = count/this.state.tweets.length;
+    console.log('average in getAverage ', newAverage)
+
+    this.setState({
+      average: newAverage
+    })
+
+    console.log('new average ', this.state.average)
+  }
+
+  componentDidMount() {
+    this.getAverage(this.state.tweets);
+    console.log('average ', this.state.average)
+    console.log(sentiment("manik and jess are fucking gods"));
   }
 
   render () {
-  	return (<div>Hello World</div>)
+  	return (
+      <div>What the Flock? {this.state.average}
+        <NegativeTweets/>
+        <PositiveTweets/>
+        <GraphDisplay/>
+        <Search getAllTweets={this.getAllTweets.bind(this)}/>
+      </div>
+    )
   }
 }
 
