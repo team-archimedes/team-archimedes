@@ -59,7 +59,7 @@ This repo contains templates that you'll use as a guide to successfully document
 ## Bare Minumum Requirements
 
 #### Group Formation
-- [ ] Get into your assigned groups
+- [X] Get into your assigned groups
 - Each member should spend five minutes (no talking) answering the following questions:
   - [ ] What are my 2 greatest technical strengths?
   - [ ] What are my 2 greatest technical challenges?
