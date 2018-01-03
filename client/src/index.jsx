@@ -4,6 +4,7 @@ import $ from 'jquery';
 import NegativeTweets from './negativeTweets.jsx';
 import PositiveTweets from './positiveTweets.jsx';
 import GraphDisplay from './GraphDisplay.jsx';
+import BarDisplay from './barDisplay.jsx';
 import Search from './Search.jsx'
 import axios from 'axios';
 import bodyParser from 'body-parser';
@@ -61,6 +62,7 @@ class App extends React.Component {
       <div>
         <Title>What the Flock?</Title>
         <Search getAllTweets={this.getAllTweets.bind(this)}/>
+        <BarDisplay />
         <NegativeTweets/>
         <PositiveTweets/>
         <GraphDisplay/>
