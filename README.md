@@ -61,19 +61,19 @@ This repo contains templates that you'll use as a guide to successfully document
 #### Group Formation
 - [X] Get into your assigned groups
 - Each member should spend five minutes (no talking) answering the following questions:
-  - [ ] What are my 2 greatest technical strengths?
-  - [ ] What are my 2 greatest technical challenges?
-  - [ ] What are my personal goals for this project?
-- [ ] Discuss your answers with your group. Get to know each other.
-- [ ] Begin brainstorming with your group about ideas in prep for the afternoon lecture.
+  - [X] What are my 2 greatest technical strengths?
+  - [X] What are my 2 greatest technical challenges?
+  - [X] What are my personal goals for this project?
+- [X] Discuss your answers with your group. Get to know each other.
+- [X] Begin brainstorming with your group about ideas in prep for the afternoon lecture.
 
 ### Role Assignment
 Read [this article](https://www.atlassian.com/agile/scrum) for an overview of scrum roles.
 As a group, decide which team members will fulfill each of the three core scrum roles.
-  - [ ] [Product Owner][2]
-  - [ ] [Scrum Master][3]
-  - [ ] [Development Team][4]
-  - [ ] Fill out the Team section in the readme with this info.
+  - [X] [Product Owner][2]
+  - [X] [Scrum Master][3]
+  - [X] [Development Team][4]
+  - [X] Fill out the Team section in the readme with this info.
 
 ### Project Organization
 Each team has a totally awesome codename. You'll use it on GitHub and in your documentation until you choose a real name for your group. Don't worry about picking it at this point (that's why I gave you codenames). Changing it later will be relatively easy and you'll likely refactor it several times after that anyway.
