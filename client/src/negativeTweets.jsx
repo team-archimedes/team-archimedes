@@ -1,4 +1,13 @@
 import React from 'react';
+import styled from 'styled-components';
+
+const Tweets = styled.div`
+  width: 20%;
+  height: 500px;
+  border: 1px solid black;
+  float: left;
+  margin-top: 5%;
+`;
 
 class NegativeTweets extends React.Component {
   constructor(props) {
@@ -14,12 +23,12 @@ class NegativeTweets extends React.Component {
 
   render() {
     return (
-      <div>
+      <Tweets>
         Negative Tweets
         <ul>
           {this.state.negativeTweets.map((tweet, i) => <li key={i} tweet={tweet}>{tweet}</li>)}
         </ul>
-      </div>
+      </Tweets>
     )
   }
 }

@@ -8,6 +8,13 @@ import Search from './Search.jsx'
 import axios from 'axios';
 import bodyParser from 'body-parser';
 import sentiment from 'sentiment';
+import styled from 'styled-components';
+
+const Title = styled.h1`
+  font-size: 40px;
+  text-align: center;
+  font-weight: bold;
+`;
 
 class App extends React.Component {
   constructor(props) {
@@ -51,11 +58,12 @@ class App extends React.Component {
 
   render () {
   	return (
-      <div>What the Flock? {this.state.average}
+      <div>
+        <Title>What the Flock?</Title>
+        <Search getAllTweets={this.getAllTweets.bind(this)}/>
         <NegativeTweets/>
         <PositiveTweets/>
         <GraphDisplay/>
-        <Search getAllTweets={this.getAllTweets.bind(this)}/>
       </div>
     )
   }
