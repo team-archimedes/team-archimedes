@@ -29,19 +29,33 @@ class App extends React.Component {
       previousSearches: [],
       average: 50,
       searchTerm: '',
-      lastSearchTerm: 'pizza'
+      lastSearchTerm: 'trump',
+      graphData: []
   	}
     this.getAverage = this.getAverage.bind(this);
     this.getAllTweets = this.getAllTweets.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this);
     this.submitQuery = this.submitQuery.bind(this);
+
     this.getPreviousSearches = this.getPreviousSearches.bind(this);
+    this.getHistory = this.getHistory.bind(this);
+
   }
 
   handleInputChange(e) {
     $('.search.container').removeClass('error');
     this.setState({
       searchTerm: e.target.value
+    });
+  }
+
+  getHistory() {
+    // come back and change from pizza to term.
+    axios.get('/database', {params:{searchTerm: this.state.lastSearchTerm}}).then((response) => {
+      console.log('response.data: ', response.data);
+      this.setState({
+        graphData: response.data // graph will now re-render with data from most recently searched term.
+      });
     });
   }
 
@@ -67,6 +81,7 @@ class App extends React.Component {
       });
       this.getAverage(this.state.tweets, term);
       this.getPreviousSearches();
+      this.getHistory();
     });
   }
 
@@ -89,10 +104,7 @@ class App extends React.Component {
     this.setState({
       average: newAverage
     });
-    axios.post('/database', {average: newAverage, searchTerm: searchTerm}).then((res) => {
-      console.log('average post success')
-      // res.send(res)
-    })
+    axios.post('/database', {average: newAverage, searchTerm: searchTerm});
   }
 
   getPreviousSearches() {
@@ -104,8 +116,8 @@ class App extends React.Component {
   }
 
   componentWillMount() {
-    // default search for pizza.
-    this.getAllTweets('pizza');
+    // default search for trump.
+    this.getAllTweets('trump');
   }
 
   render () {
@@ -115,12 +127,14 @@ class App extends React.Component {
           <h1>What the Flock?</h1>
           <img src="./images/poop_logo.png" alt="" className="logo"/>
         </div>
+        <button onClick={this.getHistory}>Get history of {this.state.lastSearchTerm}</button>
         <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
         <PreviousSearches previousSearches={this.state.previousSearches} />
         <div id="error"></div>
         <BarDisplay percentage={this.state.average} lastSearchTerm={this.state.lastSearchTerm}/>
         <NegativeTweets className="tweetColumns row" tweets={this.state.negativeTweets}/>
         <PositiveTweets className="tweetColumns row" tweets={this.state.positiveTweets}/>
+        <GraphDisplay data={this.state.graphData} term={this.state.lastSearchTerm}/>
       </div>
     )
   }

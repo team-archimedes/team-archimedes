@@ -36,6 +36,7 @@
     "jquery": "^3.1.1",
     "mongoose": "^5.0.0-rc1",
     "oauth": "^0.9.15",
+    "plotly.js": "^1.31.2",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "request": "^2.83.0",

@@ -18,5 +18,16 @@ let save = (tweet, callback) => {
   newTweet.save(callback);
 }
 
+let find = (term, callback) => {
+	console.log('looking for results in database.');
+	Tweet.find({searchTerm: term}).then((result) => {
+		callback(result);
+	});
+}
+
 module.exports.save = save;
+<<<<<<< HEAD
 module.exports.getAllData = getAllData;
+=======
+module.exports.find = find;
+>>>>>>> 059c28118e875080009648e19c7d91b92b49785d
