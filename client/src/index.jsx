@@ -10,6 +10,7 @@ import axios from 'axios';
 import bodyParser from 'body-parser';
 import sentiment from 'sentiment';
 import styled from 'styled-components';
+import './style/baseStyle.scss';
 
 const Title = styled.h1`
   font-size: 40px;
@@ -80,8 +81,11 @@ class App extends React.Component {
   render () {
   	return (
       <div>
-        <Title>What the Flock?</Title>
-        <Search getAllTweets={this.getAllTweets}/>
+        <div className="header">
+          <h1>What the Flock?</h1>
+          <img src="./images/poop_logo.png" alt="" className="logo"/>
+        </div>
+        <Search getAllTweets={this.getAllTweets.bind(this)}/>
         <BarDisplay />
         <NegativeTweets tweets={this.state.negativeTweets}/>
         <PositiveTweets tweets={this.state.positiveTweets}/>
