@@ -5,7 +5,8 @@ import NegativeTweets from './negativeTweets.jsx';
 import PositiveTweets from './positiveTweets.jsx';
 import GraphDisplay from './GraphDisplay.jsx';
 import BarDisplay from './barDisplay.jsx';
-import Search from './Search.jsx'
+import Search from './Search.jsx';
+import PreviousSearches from './PreviousSearches.jsx';
 import axios from 'axios';
 import bodyParser from 'body-parser';
 import sentiment from 'sentiment';
@@ -25,6 +26,7 @@ class App extends React.Component {
       tweets: [],
       negativeTweets: [],
       positiveTweets: [],
+      previousSearches: [],
       average: 50,
       searchTerm: '',
       lastSearchTerm: 'pizza'
@@ -33,6 +35,7 @@ class App extends React.Component {
     this.getAllTweets = this.getAllTweets.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this);
     this.submitQuery = this.submitQuery.bind(this);
+    this.getPreviousSearches = this.getPreviousSearches.bind(this);
   }
 
   handleInputChange(e) {
@@ -55,13 +58,15 @@ class App extends React.Component {
     });
 
     axios.post('/search', {searchTerm: term}).then((res) => {
-      console.log("res ", res.data);
+      // console.log("res ", res.data);
       this.setState({
         tweets: res.data,
         lastSearchTerm: term,
-        searchTerm: ''
+        searchTerm: '',
+        previousSearches: [...this.state.previousSearches, term]
       });
       this.getAverage(this.state.tweets, term);
+      this.getPreviousSearches();
     });
   }
 
@@ -90,6 +95,14 @@ class App extends React.Component {
     })
   }
 
+  getPreviousSearches() {
+    axios.get('/previousSearches').then((res) => {
+      this.setState({
+        previousSearches: res.data
+      })
+    })
+  }
+
   componentWillMount() {
     // default search for pizza.
     this.getAllTweets('pizza');
@@ -103,6 +116,7 @@ class App extends React.Component {
           <img src="./images/poop_logo.png" alt="" className="logo"/>
         </div>
         <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
+        <PreviousSearches previousSearches={this.state.previousSearches} />
         <div id="error"></div>
         <BarDisplay percentage={this.state.average} lastSearchTerm={this.state.lastSearchTerm}/>
         <NegativeTweets tweets={this.state.negativeTweets}/>

@@ -21,7 +21,7 @@ app.post('/search', function(req, res) {
   var searchTerm = req.body.searchTerm;
   console.log("searchTerm ", searchTerm)
 
-  helper.getTweet(searchTerm, (data) => {
+  helper.getTweets(searchTerm, (data) => {
     res.send(data)
   })
 
@@ -38,15 +38,15 @@ app.post('/database', function(req, res) {
     })
   res.end()
 })
-// searchTerm: tweet.searchTerm,
-// score: sentiment(tweet.tweetBody).score,
-// timeStamp: tweet.timeStamp,
-// tweetBody: tweet.tweetBody,
-// user_name: tweet.user_name,
-// user_location: tweet.user_location,
-// avatar_url: tweet.avatar_url
 
-// })
+app.get('/previousSearches', (req, res) => {
+  //shouldn't need to do .searchTerm beacuse already doing the hing
+  db.getAllData((data) => {
+    console.log('data is in server ', data[0].searchTerm)
+    res.send(data); //array of objects
+  })
+})
+
 
 app.listen(3000, function() {
   console.log('listening on port 3000!');
