@@ -11,6 +11,7 @@
 
 var OAuth = require ('oauth');
 var key = require ('../config/twitter.js');
+var sentiment = require('sentiment');
 
 module.exports.getTweets = (st, cb) => {
 	var oauth = new OAuth.OAuth(
@@ -27,9 +28,12 @@ module.exports.getTweets = (st, cb) => {
 		if (e) { console.error(e) }
 		let temp = JSON.parse(data).statuses
 		let cleaned = []
+		console.log('ST IS ', st)
 
 		temp.map((tweet) => {
 			var selectedData = {
+				// score: sentiment(tweet).score,
+				searchTerm: st,
 				timeStamp: tweet.created_at,
 				// if tweet has been retweeted, its full text lives in the retweeted_status object
 				tweetBody: tweet.retweeted_status ? tweet.retweeted_status.full_text : tweet.full_text,
