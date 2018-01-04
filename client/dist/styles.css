@@ -2,10 +2,10 @@
   -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
  }
 
- .container {
-  /* width: 500px; */
+ .container.horizontal {
+  width: 500px;
   margin: auto;
-  background: #fff;
+  /* background: #fff; */
   padding: 20px;
   overflow: hidden;
   position: relative;
