@@ -8,7 +8,7 @@ class BarDisplay extends React.Component {
 	}
 	render() {
 		return (
-		<div className="container horizontal rounded">
+		<div className="container horizontal rounded col col-6-of-6">
 		  <h2>Percentage</h2>
 		  <div className="progress-bar horizontal">
 		  <span className="negative">Negative</span><span className="positive">Positive</span>
