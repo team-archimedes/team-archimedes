@@ -1,5 +1,5 @@
-@import "normalize";
 @import "variables";
+@import "normalize";
 @import "waffleGrid";
 
 @import url('https://fonts.googleapis.com/css?family=Courgette');
@@ -8,10 +8,10 @@
 body {
 	font-family: 'Signika', sans-serif;
 	color: $main_color;
+	background: $background;
 }
 
-
-.header {
+.siteNav.header {
 	padding: 20px 0;
 	text-align: center;
 	display: block;

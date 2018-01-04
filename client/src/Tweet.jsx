@@ -7,16 +7,23 @@ class Tweet extends React.Component {
 
 	render(){
 	 return (
-		<div>
-			<div>
-				<img src={this.props.tweet.avatar_url}></img>
+		<li className="tweetBody">
+			<div className="header row">
+				<span className="avatar col col-2-of-6">
+					<img src={this.props.tweet.avatar_url}></img>
+				</span>
+				<span className="userName col col-4-of-6">
+					<h3>
+						<span>@</span>{this.props.tweet.user_name}
+					</h3>
+				</span>
 			</div>
 
-			<div>
-				<h3><span>@</span>{this.props.tweet.user_name}</h3>
-				<p>{this.props.tweet.tweetBody}</p>
+			<div className="tweetText row">
+				<p className="col col-6-of-6">{this.props.tweet.tweetBody}</p>
+				<span className="timeStamp col right-3-of-6">{this.props.tweet.created_at}</span>
 			</div>
-		</div>
+		</li>
 		)
 	}
 }

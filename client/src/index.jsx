@@ -97,16 +97,16 @@ class App extends React.Component {
 
   render () {
   	return (
-      <div>
-        <div className="header">
+      <div className="row">
+        <div className="siteNav header col col-6-of-6">
           <h1>What the Flock?</h1>
           <img src="./images/poop_logo.png" alt="" className="logo"/>
         </div>
         <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
         <div id="error"></div>
         <BarDisplay percentage={this.state.average} lastSearchTerm={this.state.lastSearchTerm}/>
-        <NegativeTweets tweets={this.state.negativeTweets}/>
-        <PositiveTweets tweets={this.state.positiveTweets}/>
+        <NegativeTweets className="tweetColumns row" tweets={this.state.negativeTweets}/>
+        <PositiveTweets className="tweetColumns row" tweets={this.state.positiveTweets}/>
       </div>
     )
   }
