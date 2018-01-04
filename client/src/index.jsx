@@ -5,7 +5,8 @@ import NegativeTweets from './negativeTweets.jsx';
 import PositiveTweets from './positiveTweets.jsx';
 import GraphDisplay from './GraphDisplay.jsx';
 import BarDisplay from './barDisplay.jsx';
-import Search from './Search.jsx'
+import Search from './Search.jsx';
+import PreviousSearches from './PreviousSearches.jsx';
 import axios from 'axios';
 import bodyParser from 'body-parser';
 import sentiment from 'sentiment';
@@ -25,6 +26,7 @@ class App extends React.Component {
       tweets: [],
       negativeTweets: [],
       positiveTweets: [],
+      previousSearches: [],
       average: 50,
       searchTerm: '',
       lastSearchTerm: 'trump',
@@ -34,7 +36,10 @@ class App extends React.Component {
     this.getAllTweets = this.getAllTweets.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this);
     this.submitQuery = this.submitQuery.bind(this);
+
+    this.getPreviousSearches = this.getPreviousSearches.bind(this);
     this.getHistory = this.getHistory.bind(this);
+
   }
 
   handleInputChange(e) {
@@ -67,13 +72,15 @@ class App extends React.Component {
     });
 
     axios.post('/search', {searchTerm: term}).then((res) => {
-      console.log("res ", res.data);
+      // console.log("res ", res.data);
       this.setState({
         tweets: res.data,
         lastSearchTerm: term,
-        searchTerm: ''
+        searchTerm: '',
+        previousSearches: [...this.state.previousSearches, term]
       });
       this.getAverage(this.state.tweets, term);
+      this.getPreviousSearches();
       this.getHistory();
     });
   }
@@ -100,6 +107,14 @@ class App extends React.Component {
     axios.post('/database', {average: newAverage, searchTerm: searchTerm});
   }
 
+  getPreviousSearches() {
+    axios.get('/previousSearches').then((res) => {
+      this.setState({
+        previousSearches: res.data
+      })
+    })
+  }
+
   componentWillMount() {
     // default search for trump.
     this.getAllTweets('trump');
@@ -114,6 +129,8 @@ class App extends React.Component {
         </div>
         <button onClick={this.getHistory}>Get history of {this.state.lastSearchTerm}</button>
         <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
+        <PreviousSearches previousSearches={this.state.previousSearches} />
+        <div id="error"></div>
         <BarDisplay percentage={this.state.average} lastSearchTerm={this.state.lastSearchTerm}/>
         <NegativeTweets className="tweetColumns row" tweets={this.state.negativeTweets}/>
         <PositiveTweets className="tweetColumns row" tweets={this.state.positiveTweets}/>

@@ -37,7 +37,16 @@ app.post('/database', function(req, res) {
       searchHour: Date.now()
     });
   res.end()
-});
+})
+
+app.get('/previousSearches', (req, res) => {
+  //shouldn't need to do .searchTerm beacuse already doing the hing
+  db.getAllData((data) => {
+    console.log('data is in server ', data[0].searchTerm)
+    res.send(data); //array of objects
+  })
+})
+
 
 app.get('/database', (req, res) => {
   // query the database for the search term and return all matches.
@@ -55,7 +64,6 @@ app.get('/database', (req, res) => {
 // avatar_url: tweet.avatar_url
 
 // })
-
 app.listen(3000, function() {
   console.log('listening on port 3000!');
 });

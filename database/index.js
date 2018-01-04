@@ -3,22 +3,15 @@ mongoose.connect('mongodb://localhost/fetcher');
 
 let tweetSchema = mongoose.Schema({
   searchTerm: String,
-  searchHour: Number, 
-  // data: Object,
+  searchHour: Number,
   averageScore: Number
 });
 
-// score: Number,
-// searchTerm: String,
-// timeStamp: String,
-// tweetBody: String,
-// user_location: String,
-// user_name: String,
-// avatar_url: String
-
-
-
 let Tweet = mongoose.model('Tweet', tweetSchema);
+
+let getAllData = (callback) => {
+  Tweet.find().then((data) => {callback(data)});
+}
 
 let save = (tweet, callback) => {
   var newTweet = new Tweet(tweet);
@@ -33,4 +26,8 @@ let find = (term, callback) => {
 }
 
 module.exports.save = save;
+<<<<<<< HEAD
+module.exports.getAllData = getAllData;
+=======
 module.exports.find = find;
+>>>>>>> 059c28118e875080009648e19c7d91b92b49785d
