@@ -31,7 +31,12 @@ class App extends React.Component {
   }
 
   getAllTweets(term) {
-    console.log('searched ', term)
+    // first reset state so that new tweets will render properly.
+    this.setState({
+      negativeTweets: [],
+      positiveTweets: []
+    });
+
     axios.post('/search', {searchTerm: term}).then((res) => {
       console.log("res ", res.data);
       this.setState({
@@ -63,7 +68,8 @@ class App extends React.Component {
     this.setState({
       average: newAverage
     });
-
+    console.log('negative tweets: ', this.state.negativeTweets);
+    console.log('positive tweets: ', this.state.positiveTweets);
   }
 
   componentWillMount() {
