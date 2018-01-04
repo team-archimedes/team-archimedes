@@ -13,12 +13,6 @@ import sentiment from 'sentiment';
 import styled from 'styled-components';
 import './style/baseStyle.scss';
 
-const Title = styled.h1`
-  font-size: 40px;
-  text-align: center;
-  font-weight: bold;
-`;
-
 class App extends React.Component {
   constructor(props) {
   	super(props)
@@ -128,7 +122,6 @@ class App extends React.Component {
           <h1>What the Flock?</h1>
           <img src="./images/poop_logo.png" alt="" className="logo"/>
         </div>
-        <button onClick={this.getHistory}>Get history of {this.state.lastSearchTerm}</button>
         <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
         <PreviousSearches previousSearches={this.state.previousSearches} />
         <div id="error"></div>
