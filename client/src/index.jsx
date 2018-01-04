@@ -21,50 +21,70 @@ class App extends React.Component {
   constructor(props) {
   	super(props)
   	this.state = {
-      tweets: ["Fuck", "fuck", "fuck"],
+      tweets: [],
+      negativeTweets: [],
+      positiveTweets: [],
       average: 0
   	}
-    this.getAverage = this.getAverage.bind(this)
+    this.getAverage = this.getAverage.bind(this);
+    this.getAllTweets = this.getAllTweets.bind(this)
   }
 
   getAllTweets(term) {
-    console.log('searched ', term)
-    axios.post('/search', {searchTerm: term}).then((res) => console.log("res ",res.data))
+    // first reset state so that new tweets will render properly.
+    this.setState({
+      negativeTweets: [],
+      positiveTweets: []
+    });
+
+    axios.post('/search', {searchTerm: term}).then((res) => {
+      console.log("res ", res.data);
+      this.setState({
+        tweets: res.data
+      });
+      this.getAverage(this.state.tweets);
+    });
   }
 
   getAverage(tweets) {
-    // var messages = this.state.tweets;
     var count = 0;
 
-    this.state.tweets.map((message) => {
-      var score = sentiment(message).score;
-      console.log('score ', score)
-      count+=score;
+    tweets.map((message) => {
+      var score = sentiment(message.tweetBody).score;
+      count += score;
+      if ( score < 0 ) {
+        // add negative tweets to negativeTweets array
+        this.setState({
+          negativeTweets: [...this.state.negativeTweets, message]
+        });
+      } else if ( score > 0 ) {
+        // add positive tweets to positiveTweets array
+        this.setState({
+          positiveTweets: [...this.state.positiveTweets, message]
+        });
+      } 
     });
-    var newAverage = count/this.state.tweets.length;
-    console.log('average in getAverage ', newAverage)
-
+    var newAverage = count/tweets.length;
     this.setState({
       average: newAverage
-    })
-
-    console.log('new average ', this.state.average)
+    });
+    console.log('negative tweets: ', this.state.negativeTweets);
+    console.log('positive tweets: ', this.state.positiveTweets);
   }
 
-  componentDidMount() {
-    this.getAverage(this.state.tweets);
-    console.log('average ', this.state.average)
-    console.log(sentiment("manik and jess are fucking gods"));
+  componentWillMount() {
+    // default search for pizza.
+    this.getAllTweets('pizza');
   }
 
   render () {
   	return (
       <div>
         <Title>What the Flock?</Title>
-        <Search getAllTweets={this.getAllTweets.bind(this)}/>
+        <Search getAllTweets={this.getAllTweets}/>
         <BarDisplay />
-        <NegativeTweets/>
-        <PositiveTweets/>
+        <NegativeTweets tweets={this.state.negativeTweets}/>
+        <PositiveTweets tweets={this.state.positiveTweets}/>
         <GraphDisplay/>
       </div>
     )
