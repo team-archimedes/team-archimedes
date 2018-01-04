@@ -25,10 +25,27 @@ class App extends React.Component {
       tweets: [],
       negativeTweets: [],
       positiveTweets: [],
-      average: 50
+      average: 50,
+      searchTerm: '',
+      lastSearchTerm: 'pizza'
   	}
     this.getAverage = this.getAverage.bind(this);
     this.getAllTweets = this.getAllTweets.bind(this)
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.submitQuery = this.submitQuery.bind(this);
+  }
+
+  handleInputChange(e) {
+
+    this.setState({
+      searchTerm: e.target.value
+    });
+
+  }
+
+  submitQuery(e) {
+    e.preventDefault();
+    this.getAllTweets(this.state.searchTerm);
   }
 
   getAllTweets(term) {
@@ -41,7 +58,9 @@ class App extends React.Component {
     axios.post('/search', {searchTerm: term}).then((res) => {
       console.log("res ", res.data);
       this.setState({
-        tweets: res.data
+        tweets: res.data,
+        lastSearchTerm: this.state.searchTerm,
+        searchTerm: ''
       });
       this.getAverage(this.state.tweets);
     });
@@ -80,7 +99,7 @@ class App extends React.Component {
           <h1>What the Flock?</h1>
           <img src="./images/poop_logo.png" alt="" className="logo"/>
         </div>
-        <Search getAllTweets={this.getAllTweets.bind(this)}/>
+        <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
         <BarDisplay percentage={this.state.average}/>
         <NegativeTweets tweets={this.state.negativeTweets}/>
         <PositiveTweets tweets={this.state.positiveTweets}/>
