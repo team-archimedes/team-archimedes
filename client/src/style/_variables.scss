@@ -1,0 +1,110 @@
+
+///////////////////////////////////////////////////////////////////
+// Font Faces /////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+
+// $font_path: '../fonts';
+// $base_folder:'sf_text';
+// $header_folder:'sf_display';
+// $script_folder:'droid_serif';
+// $icons_folder:'icons';
+// $base_font_size: 16;
+
+// $base_font: 'SF Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+// $header_font: 'SF Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+// $script_font: 'Droid Serif', Georgia, serif;
+// $code_font: Consolas, "Andale Mono", Courier, "Courier New", monospace;
+
+///////////////////////////////////////////////////////////////////
+// Colors /////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+
+$main_color: #283044;
+$white: #ffffff;
+
+$light_blue: #00aced;
+$base_gray: #d4d8d4;
+$dark_blue: #433e90;
+$gray_dark: #a19c9c;
+$gray_light: #d2d2d2;
+
+///////////////////////////////////////////////////////////////////
+// Mixins /////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+
+// REM > PX
+@function calculatePx($rem_size) {
+	$pxSize: #{strip-unit($rem_size * $base_font_size)};
+	@return #{$pxSize}px;
+}
+
+// PX > REM
+@function calculateRem($px_size) {
+	$remSize: #{strip-unit($px_size / $base_font_size)};
+	@return #{$remSize}rem;
+}
+
+@mixin px_flip($properties, $rem_size) {
+	@each $property in $properties {
+		#{$property}: calculatePx($rem_size);
+	}
+}
+
+@mixin rem_flip($properties, $px_size) {
+	@each $property in $properties {
+		#{$property}: calculateRem($px_size);
+		#{$property}: $px_size;
+	}
+}
+
+
+@mixin vert_align {
+	position: absolute;
+	top: 50%;
+	transform: translate(0,-50%);
+}
+
+@mixin horz_align {
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%,0);
+}
+
+@mixin centered {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+}
+
+@mixin box {
+	box-sizing: border-box;
+}
+
+@mixin cf {
+	&:after {
+		content: "";
+		clear: both;
+		display: table;
+	}
+}
+
+///////////////////////////////////////////////////////////////////
+// Breakpoints ////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+
+$min_size: 320px;
+$medium_size: 480px;
+$large_size: 800px;
+
+@mixin min_bpSize($px_size) {
+	@media only screen and (min-width: calculateRem($px_size)) {
+		@content;
+	}
+}
+
+@mixin max_bpSize($px_size) {
+	@media only screen and (max-width: calculateRem($px_size)) {
+		@content;
+	}
+}
