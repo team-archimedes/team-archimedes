@@ -21,7 +21,7 @@ app.post('/search', function(req, res) {
   var searchTerm = req.body.searchTerm;
   console.log("searchTerm ", searchTerm)
 
-  helper.getTweet(searchTerm, (data) => {
+  helper.getTweets(searchTerm, (data) => {
     res.send(data)
   })
 

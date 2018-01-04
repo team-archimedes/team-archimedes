@@ -32,6 +32,7 @@ class Search extends React.Component {
             </SubmitButton>
           </form>
         </div>
+        <div className="errorMessage">Oh no! You need a keyword to see the magic happen.</div>
       </div>
     )
   }
