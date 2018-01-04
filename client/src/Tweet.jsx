@@ -9,7 +9,7 @@ class Tweet extends React.Component {
 	 return (
 		<li className="tweetBody">
 			<div className="header row">
-				<span className="avatar col col-2-of-6">
+				<span className="avatar col col-1-of-6">
 					<img src={this.props.tweet.avatar_url}></img>
 				</span>
 				<span className="userName col col-4-of-6">

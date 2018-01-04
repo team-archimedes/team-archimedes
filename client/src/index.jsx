@@ -36,7 +36,7 @@ class App extends React.Component {
   }
 
   handleInputChange(e) {
-    $('#error').text('');
+    $('.search.container').removeClass('error');
     this.setState({
       searchTerm: e.target.value
     });
@@ -44,7 +44,7 @@ class App extends React.Component {
 
   submitQuery(e) {
     e.preventDefault();
-    this.state.searchTerm === '' ? $('#error').text('please enter a valid query.') : this.getAllTweets(this.state.searchTerm);
+    this.state.searchTerm === '' ? $('.search.container').addClass('error') : this.getAllTweets(this.state.searchTerm);
   }
 
   getAllTweets(term) {
@@ -103,7 +103,6 @@ class App extends React.Component {
           <img src="./images/poop_logo.png" alt="" className="logo"/>
         </div>
         <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
-        <div id="error"></div>
         <BarDisplay percentage={this.state.average} lastSearchTerm={this.state.lastSearchTerm}/>
         <NegativeTweets className="tweetColumns row" tweets={this.state.negativeTweets}/>
         <PositiveTweets className="tweetColumns row" tweets={this.state.positiveTweets}/>
