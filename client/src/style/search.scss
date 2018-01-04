@@ -60,7 +60,9 @@ a {
 		padding: 12px 36px;
 		
 		&:hover {
-			background: darken($dark_blue, 4%);
+			background: lighten($dark_blue, 10%);
+			position: relative;
+			top:-1px
 		}
 		
 		&:active {
