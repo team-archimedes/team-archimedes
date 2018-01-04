@@ -25,4 +25,12 @@ let save = (tweet, callback) => {
   newTweet.save(callback);
 }
 
+let find = (term, callback) => {
+	console.log('looking for results in database.');
+	Tweet.find({searchTerm: term}).then((result) => {
+		callback(result);
+	});
+}
+
 module.exports.save = save;
+module.exports.find = find;

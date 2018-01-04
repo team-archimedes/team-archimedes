@@ -35,9 +35,17 @@ app.post('/database', function(req, res) {
       searchTerm: searchTerm,
       averageScore: average,
       searchHour: Date.now()
-    })
+    });
   res.end()
-})
+});
+
+app.get('/database', (req, res) => {
+  // query the database for the search term and return all matches.
+  db.find(req.query.searchTerm, (results) => {
+    res.send(results);
+  });
+
+});
 // searchTerm: tweet.searchTerm,
 // score: sentiment(tweet.tweetBody).score,
 // timeStamp: tweet.timeStamp,
