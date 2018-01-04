@@ -24,10 +24,18 @@ class App extends React.Component {
       tweets: [],
       negativeTweets: [],
       positiveTweets: [],
-      average: 0
+      average: 0,
+      query: ''
   	}
     this.getAverage = this.getAverage.bind(this);
-    this.getAllTweets = this.getAllTweets.bind(this)
+    this.getAllTweets = this.getAllTweets.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+  }
+
+  handleInputChange(e) {
+    this.setState({
+      query: e.target.value
+    })
   }
 
   getAllTweets(term) {
@@ -46,12 +54,20 @@ class App extends React.Component {
     });
   }
 
+  submitQuery(e) {
+    {
+      e.preventDefault();
+      this.props.getAllTweets(this.state.searchTerm);
+      this.setState({searchTerm: ''});
+    }
+  }
+
   getAverage(tweets) {
     var count = 0;
 
     tweets.map((message) => {
       var score = sentiment(message.tweetBody).score;
-      count += score;
+      
       if ( score < 0 ) {
         // add negative tweets to negativeTweets array
         this.setState({
@@ -64,12 +80,14 @@ class App extends React.Component {
         });
       } 
     });
-    var newAverage = count/tweets.length;
+    
     this.setState({
-      average: newAverage
+      average: this.state.negativeTweets.length / this.state.tweets.length
     });
+
     console.log('negative tweets: ', this.state.negativeTweets);
     console.log('positive tweets: ', this.state.positiveTweets);
+    console.log('average: ', this.state.average);
   }
 
   componentWillMount() {
@@ -81,8 +99,8 @@ class App extends React.Component {
   	return (
       <div>
         <Title>What the Flock?</Title>
-        <Search getAllTweets={this.getAllTweets}/>
-        <BarDisplay />
+        <Search getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange} submitQuery={this.submitQuery}/>
+        <BarDisplay average={this.state.average}/>
         <NegativeTweets tweets={this.state.negativeTweets}/>
         <PositiveTweets tweets={this.state.positiveTweets}/>
         <GraphDisplay/>

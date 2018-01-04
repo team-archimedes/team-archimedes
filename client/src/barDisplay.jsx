@@ -5,23 +5,21 @@ class BarDisplay extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			percentage: 0
+			// percentage: 0
 		}
 		setInterval(() => {
-			this.setState({
-				percentage: this.state.percentage + 1
-			})
+			var percent = this.props.average * 100;
 			$('.horizontal .progress-fill span').each(function(){
-  		var percent = $(this).html();
-  		$(this).parent().css('width', percent);
-		});
-		},1000)
+	  		$(this).parent().css('width', percent + '%');
+			});
+		}, 100);
+
 	}
 
 	componentDidMount() {
+  	var percent = this.props.average * 100;
 		$('.horizontal .progress-fill span').each(function(){
-  		var percent = $(this).html();
-  		$(this).parent().css('width', percent);
+  		$(this).parent().css('width', percent + '%');
 		});
 	}
 
@@ -32,7 +30,7 @@ class BarDisplay extends React.Component {
 		  <div className="progress-bar horizontal">
 		    <div className="progress-track">
 		      <div className="progress-fill">
-		        <span>{this.state.percentage + '%'}</span>
+		        <span></span>
 		      </div>
 		    </div>
 		  </div>

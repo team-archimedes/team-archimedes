@@ -20,7 +20,7 @@ module.exports.getTweet = (st, cb) => {
 		'HMAC-SHA1'
 	);
 
-	oauth.get(`https://api.twitter.com/1.1/search/tweets.json?q=${st}&count=100`, key.ACCESS_TOKEN, key.ACCESS_TOKEN_SECRET, function(e, data, res) {
+	oauth.get(`https://api.twitter.com/1.1/search/tweets.json?q=${st}&count=100&tweet_mode=extended`, key.ACCESS_TOKEN, key.ACCESS_TOKEN_SECRET, function(e, data, res) {
 		if (e) { console.error(e) }
 		let temp = JSON.parse(data).statuses
 		let cleaned = []
@@ -28,7 +28,7 @@ module.exports.getTweet = (st, cb) => {
 		temp.map((tweet) => {
 			var selectedData = {
 				timeStamp: tweet.created_at,
-				tweetBody: tweet.retweeted_status ? tweet.retweeted_status.text : tweet.text, 
+				tweetBody: tweet.retweeted_status ? tweet.retweeted_status.full_text : tweet.full_text, 
 				user_name: tweet.user.screen_name,
 				user_location: tweet.user.location,
 				avatar_url: tweet.user.profile_image_url
