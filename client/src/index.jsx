@@ -61,11 +61,11 @@ class App extends React.Component {
         lastSearchTerm: term,
         searchTerm: ''
       });
-      this.getAverage(this.state.tweets);
+      this.getAverage(this.state.tweets, term);
     });
   }
 
-  getAverage(tweets) {
+  getAverage(tweets, searchTerm) {
     tweets.map((message) => {
       var score = sentiment(message.tweetBody).score;
       if ( score < 0 ) {
@@ -78,12 +78,16 @@ class App extends React.Component {
         this.setState({
           positiveTweets: [...this.state.positiveTweets, message]
         });
-      } 
+      }
     });
     var newAverage = (this.state.negativeTweets.length / this.state.tweets.length) * 100
     this.setState({
       average: newAverage
     });
+    axios.post('/database', {average: newAverage, searchTerm: searchTerm}).then((res) => {
+      console.log('average post success')
+      // res.send(res)
+    })
   }
 
   componentWillMount() {
