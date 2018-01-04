@@ -79,6 +79,8 @@ a {
 		
 		&:hover {
 			background: darken($light_blue, 10%);
+			position: relative;
+			top:-1px
 		}
 		
 		&:active {
