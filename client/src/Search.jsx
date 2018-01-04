@@ -13,7 +13,7 @@ class Search extends React.Component {
 
   render() {
     return (
-      <div className="container">
+      <div className="search container col col-6-of-6">
         <div className="container__item">
           <form className="form" 
             onSubmit={this.props.submitQuery}>
@@ -26,7 +26,7 @@ class Search extends React.Component {
             ></SearchContainer>
             <SubmitButton
               type="submit" 
-              className="btn btn--primary btn--inside uppercase"
+              className="btn btn--primary btn--inside"
             >
             Send
             </SubmitButton>

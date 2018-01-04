@@ -1,21 +1,13 @@
 //** variables
 @import "variables";
-$background: #f5f6fa;
-$text: #9c9c9c;
-$input-bg-color: #fff;
-$input-text-color: #a3a3a3;
-$button-bg-color: #7f8ff4;
-$button-text-color: #fff;
 
 //** root
-:root {
-	background: $background;
-	color: $text;
-}
+// :root {
+// 	background: $background;
+// 	color: $text;
+// }
 
-html,
-body,
-.container {
+html, body, .container {
 	height: 100%;
 }
 
@@ -28,16 +20,12 @@ a {
 }
 
 //** helper
-.container {
+.search.container {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	background: transparent;
-}
-
-.uppercase {
-	text-transform: uppercase;
 }
 
 //** button
@@ -51,6 +39,7 @@ a {
 	padding: 0;
 	transition: all 200ms ease-in;
 	cursor: pointer;
+	text-transform: uppercase;
 	
 	&--primary {
 		background: $dark_blue;
