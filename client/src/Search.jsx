@@ -27,7 +27,11 @@ class Search extends React.Component {
     return (
       <div className="container">
         <div className="container__item">
-          <form className="form">
+          <form className="form" 
+            onSubmit={(e) => {
+              e.preventDefault();
+              this.props.getAllTweets(this.state.searchTerm);
+            }}>
             <SearchContainer
               type="text"
               className="form__field"
@@ -36,13 +40,8 @@ class Search extends React.Component {
               onChange={this.handleInputChange.bind(this)}
             ></SearchContainer>
             <SubmitButton
-              type="button" 
+              type="submit" 
               className="btn btn--primary btn--inside uppercase"
-              onClick={(e) => {
-                e.preventDefault();
-                this.props.getAllTweets(this.state.searchTerm);
-                console.log('IN THE ONCLICK')
-              }}
             >
             Send
             </SubmitButton>

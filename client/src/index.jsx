@@ -25,7 +25,7 @@ class App extends React.Component {
       tweets: [],
       negativeTweets: [],
       positiveTweets: [],
-      average: 0
+      average: 50
   	}
     this.getAverage = this.getAverage.bind(this);
     this.getAllTweets = this.getAllTweets.bind(this)
@@ -48,11 +48,8 @@ class App extends React.Component {
   }
 
   getAverage(tweets) {
-    var count = 0;
-
     tweets.map((message) => {
       var score = sentiment(message.tweetBody).score;
-      count += score;
       if ( score < 0 ) {
         // add negative tweets to negativeTweets array
         this.setState({
@@ -65,12 +62,10 @@ class App extends React.Component {
         });
       } 
     });
-    var newAverage = count/tweets.length;
+    var newAverage = (this.state.negativeTweets.length / this.state.tweets.length) * 100
     this.setState({
       average: newAverage
     });
-    console.log('negative tweets: ', this.state.negativeTweets);
-    console.log('positive tweets: ', this.state.positiveTweets);
   }
 
   componentWillMount() {
@@ -86,7 +81,7 @@ class App extends React.Component {
           <img src="./images/poop_logo.png" alt="" className="logo"/>
         </div>
         <Search getAllTweets={this.getAllTweets.bind(this)}/>
-        <BarDisplay />
+        <BarDisplay percentage={this.state.average}/>
         <NegativeTweets tweets={this.state.negativeTweets}/>
         <PositiveTweets tweets={this.state.positiveTweets}/>
         <GraphDisplay/>
