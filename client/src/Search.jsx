@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const SearchContainer = styled.input`
-  width: 25%;
+  width: 50%;
   height: 60px;
   border: 1px solid black;
   display: block;
@@ -16,38 +16,24 @@ const SubmitButton = styled.button`
   display:block;
   margin: 0 auto;
   margin-top: 10px;
-  font-size: 16px;
+  font-size: 12px;
   text-align: center;
 `;
 
 class Search extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      searchTerm: ''
-    }
   }
 
-  handleInputChange(e) {
-    // e.preventDefault();
-    this.setState({
-      searchTerm: e.target.value
-    })
-    // console.log('searchTerm ', this.state.searchTerm)
-  }
+  
 
   render() {
     return (
       <div>
         <form>
-          <SearchContainer type="text" placeholder='search...' value={this.state.searchTerm} onChange={this.handleInputChange.bind(this)} >
+          <SearchContainer type="text" placeholder='show me how twitter feels about...' value={this.state.searchTerm} onChange={this.props.handleInputChange} >
           </SearchContainer>
-          <SubmitButton onClick={(e) => {
-            e.preventDefault();
-            this.props.getAllTweets(this.state.searchTerm);
-            console.log('IN THE ONCLICK')
-          }}>
+          <SubmitButton onClick={this.props.submitQuery}>
             Submit
           </SubmitButton>
         </form>
