@@ -9,39 +9,24 @@ const SubmitButton = styled.button``;
 class Search extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      searchTerm: ''
-    }
-  }
-
-  handleInputChange(e) {
-    // e.preventDefault();
-    this.setState({
-      searchTerm: e.target.value
-    })
-    // console.log('searchTerm ', this.state.searchTerm)
   }
 
   render() {
     return (
-      <div className="container">
+      <div className="search container col col-6-of-6">
         <div className="container__item">
           <form className="form" 
-            onSubmit={(e) => {
-              e.preventDefault();
-              this.props.getAllTweets(this.state.searchTerm);
-            }}>
+            onSubmit={this.props.submitQuery}>
             <SearchContainer
               type="text"
               className="form__field"
               placeholder="search..."
-              value={this.state.searchTerm}
-              onChange={this.handleInputChange.bind(this)}
+              value={this.props.searchTerm}
+              onChange={this.props.handleInputChange}
             ></SearchContainer>
             <SubmitButton
               type="submit" 
-              className="btn btn--primary btn--inside uppercase"
+              className="btn btn--primary btn--inside"
             >
             Send
             </SubmitButton>
@@ -53,16 +38,3 @@ class Search extends React.Component {
 }
 
 export default Search;
-      // <div>
-      //   <form>
-      //     <SearchContainer type="text" placeholder='search...' value={this.state.searchTerm} onChange={this.handleInputChange.bind(this)} >
-      //     </SearchContainer>
-      //     <SubmitButton onClick={(e) => {
-      //       e.preventDefault();
-      //       this.props.getAllTweets(this.state.searchTerm);
-      //       console.log('IN THE ONCLICK')
-      //     }}>
-      //       Submit
-      //     </SubmitButton>
-      //   </form>
-      // </div>

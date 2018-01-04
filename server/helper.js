@@ -1,15 +1,19 @@
-
-///////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// getTweet() does the work of querying the twitter API and then
+// getTweets() does the work of querying the twitter API and then
 // executes the callback function from index.js with the results.
 //
-///////////////////////////////////////////////////////////////////
+// We used the oauth npm module to handle authorization with the twitter api.
+// oauth module docs: https://www.npmjs.com/package/oauth
+// twitter api docs: https://developer.twitter.com/en/docs/basics/authentication/guides/authorizing-a-request
+//
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var OAuth = require ('oauth');
 var key = require ('../config/twitter.js');
+var sentiment = require('sentiment');
 
-module.exports.getTweet = (st, cb) => {
+module.exports.getTweets = (st, cb) => {
 	var oauth = new OAuth.OAuth(
 		'https://api.twitter.com/oauth/request_token',
 		'https://api.twitter.com/oauth/access_token',
@@ -24,11 +28,15 @@ module.exports.getTweet = (st, cb) => {
 		if (e) { console.error(e) }
 		let temp = JSON.parse(data).statuses
 		let cleaned = []
+		console.log('ST IS ', st)
 
 		temp.map((tweet) => {
 			var selectedData = {
+				// score: sentiment(tweet).score,
+				searchTerm: st,
 				timeStamp: tweet.created_at,
-				tweetBody: tweet.retweeted_status ? tweet.retweeted_status.full_text : tweet.full_text, 
+				// if tweet has been retweeted, its full text lives in the retweeted_status object
+				tweetBody: tweet.retweeted_status ? tweet.retweeted_status.full_text : tweet.full_text,
 				user_name: tweet.user.screen_name,
 				user_location: tweet.user.location,
 				avatar_url: tweet.user.profile_image_url
