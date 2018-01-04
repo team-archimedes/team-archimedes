@@ -59,7 +59,7 @@ class App extends React.Component {
       console.log("res ", res.data);
       this.setState({
         tweets: res.data,
-        lastSearchTerm: this.state.searchTerm,
+        lastSearchTerm: term,
         searchTerm: ''
       });
       this.getAverage(this.state.tweets);
@@ -100,7 +100,7 @@ class App extends React.Component {
           <img src="./images/poop_logo.png" alt="" className="logo"/>
         </div>
         <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
-        <BarDisplay percentage={this.state.average}/>
+        <BarDisplay percentage={this.state.average} lastSearchTerm={this.state.lastSearchTerm}/>
         <NegativeTweets tweets={this.state.negativeTweets}/>
         <PositiveTweets tweets={this.state.positiveTweets}/>
         <GraphDisplay/>
