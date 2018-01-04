@@ -39,7 +39,7 @@ class App extends React.Component {
   }
 
   handleInputChange(e) {
-    $('#error').text('');
+    $('.search.container').removeClass('error');
     this.setState({
       searchTerm: e.target.value
     });
@@ -47,7 +47,7 @@ class App extends React.Component {
 
   submitQuery(e) {
     e.preventDefault();
-    this.state.searchTerm === '' ? $('#error').text('please enter a valid query.') : this.getAllTweets(this.state.searchTerm);
+    this.state.searchTerm === '' ? $('.search.container').addClass('error') : this.getAllTweets(this.state.searchTerm);
   }
 
   getAllTweets(term) {
@@ -110,8 +110,8 @@ class App extends React.Component {
 
   render () {
   	return (
-      <div>
-        <div className="header">
+      <div className="row">
+        <div className="siteNav header col col-6-of-6">
           <h1>What the Flock?</h1>
           <img src="./images/poop_logo.png" alt="" className="logo"/>
         </div>
@@ -119,8 +119,8 @@ class App extends React.Component {
         <PreviousSearches previousSearches={this.state.previousSearches} />
         <div id="error"></div>
         <BarDisplay percentage={this.state.average} lastSearchTerm={this.state.lastSearchTerm}/>
-        <NegativeTweets tweets={this.state.negativeTweets}/>
-        <PositiveTweets tweets={this.state.positiveTweets}/>
+        <NegativeTweets className="tweetColumns row" tweets={this.state.negativeTweets}/>
+        <PositiveTweets className="tweetColumns row" tweets={this.state.positiveTweets}/>
       </div>
     )
   }

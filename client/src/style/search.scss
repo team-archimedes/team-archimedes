@@ -1,21 +1,13 @@
 //** variables
 @import "variables";
-$background: #f5f6fa;
-$text: #9c9c9c;
-$input-bg-color: #fff;
-$input-text-color: #a3a3a3;
-$button-bg-color: #7f8ff4;
-$button-text-color: #fff;
 
 //** root
-:root {
-	background: $background;
-	color: $text;
-}
+// :root {
+// 	background: $background;
+// 	color: $text;
+// }
 
-html,
-body,
-.container {
+html, body, .container {
 	height: 100%;
 }
 
@@ -27,17 +19,42 @@ a {
 	}
 }
 
+
+
 //** helper
-.container {
+.search.container {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	background: transparent;
-}
+	padding-bottom: 30px;
+	position: relative;
 
-.uppercase {
-	text-transform: uppercase;
+	.errorMessage {
+		display: none;
+		padding-top: 10px;
+		position: absolute;
+		bottom: 0;
+	}
+
+	&.error {
+		.errorMessage {
+			display: block;
+		}
+
+		.form {
+			input {
+				box-shadow: 0 0 10px 2px rgba(#e74c3c, .25);
+			}
+		}
+
+		.btn {
+			&--primary {
+				// box-shadow: 0 0 10px 2px rgba(#e74c3c, .25);
+			}
+		}
+	}
 }
 
 //** button
@@ -49,18 +66,21 @@ a {
 	border: 0;
 	outline: 0;
 	padding: 0;
-	transition: all 200ms ease-in;
+	transition: all 200ms ease-in-out;
 	cursor: pointer;
+	text-transform: uppercase;
 	
 	&--primary {
-		background: $dark_blue;
+		background: $light_blue;
 		color: $button-text-color;
 		box-shadow: 0 0 10px 2px rgba(0, 0, 0, .1);
 		border-radius: 2px;
 		padding: 12px 36px;
 		
 		&:hover {
-			background: darken($dark_blue, 4%);
+			background: darken($light_blue, 10%);
+			position: relative;
+			top:-1px
 		}
 		
 		&:active {
