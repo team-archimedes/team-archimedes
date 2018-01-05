@@ -2,14 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Tweet from './Tweet.jsx';
 
-const Tweets = styled.div`
-  width: 20%;
-  height: 500px;
-  border: 1px solid black;
-  float: left;
-  margin-top: 5%;
-  overflow: scroll;
-`;
+const Tweets = styled.div``;
 
 class NegativeTweets extends React.Component {
   constructor(props) {
@@ -18,11 +11,15 @@ class NegativeTweets extends React.Component {
 
   render() {
     return (
-      <Tweets>
-        Negative Tweets
-        <ul>
-          {this.props.tweets.map((tweet, i) => <Tweet key={i} tweet={tweet}></Tweet>)}
-        </ul>
+      <Tweets className="col col-3-of-6" style={{backgroundColor: 'rgba(192, 57, 43, .2)'}}>
+        <div className="row">
+          <div className="columnTitle col col-6-of-6">
+            <h3>Negative Tweets</h3>
+          </div>
+          <ul>
+            {this.props.tweets.map((tweet, i) => <Tweet key={i} tweet={tweet}/>)}
+          </ul>
+        </div>
       </Tweets>
     )
   }

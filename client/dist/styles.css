@@ -1,11 +1,5 @@
-*, *:before, *:after {
-  -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
- }
-
- .container.horizontal {
-  width: 500px;
+/* .container.horizontal {
   margin: auto;
-  /* background: #fff; */
   padding: 20px;
   overflow: hidden;
   position: relative;
@@ -41,7 +35,38 @@
 .positive {
   position: relative;
   float:right;
+} */
+
+.horizontal .progress-fill {
+  transition: width 2s
 }
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.loader:empty {
+  position: absolute;
+  top: calc(50%);
+  left: calc(50% - 3em);
+  width: 6em;
+  height: 6em;
+  border: .5em solid rgba(0, 0, 0, 0.2);
+  border-left: .5em solid #00aced;
+  border-radius: 50%;
+  animation: load8 1.1s infinite linear;
+}
+
+@keyframes load8 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 
 /*.rounded .progress-track,
 .rounded .progress-fill {
