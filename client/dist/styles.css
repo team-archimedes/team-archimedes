@@ -37,6 +37,11 @@
   float:right;
 } */
 
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
 /*.rounded .progress-track,
 .rounded .progress-fill {
   border-radius: 3px;

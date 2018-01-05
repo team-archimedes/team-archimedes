@@ -88,6 +88,7 @@ class App extends React.Component {
   getAverage(tweets, searchTerm) {
     tweets.map((message) => {
       var score = sentiment(message.tweetBody).score;
+      message.score = score;
       if ( score < 0 ) {
         // add negative tweets to negativeTweets array
         this.setState({
