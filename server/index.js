@@ -13,14 +13,13 @@ var getTweets = require('./helper.js').getTweet; // helper function - see helper
 var helper = require('./helper.js');
 var db = require('../database/index.js');
 var sentiment = require('sentiment');
+var sanitizeHTML = require('sanitize-html')
 
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.json())
 
 app.post('/search', function(req, res) {
-  var searchTerm = req.body.searchTerm;
-  console.log("searchTerm ", searchTerm)
-
+  var searchTerm = sanitizeHTML(req.body.searchTerm) || 'undefined';
   helper.getTweets(searchTerm, (data) => {
     res.send(data)
   })
