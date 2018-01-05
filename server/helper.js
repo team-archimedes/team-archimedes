@@ -17,18 +17,42 @@ var key = require ('../config/twitter.js');
 var sentiment = require('sentiment');
 var db = require('../database/index.js');
 
-module.exports.cronJob = () => {
+cronJob = () => {
 	console.log('cronJob!');
-	// step one: query database for all search terms.
+	
+	db.getAllTermData((res) => {
+	// step one - get all search terms
+    res.forEach((term) => {
+    // iterate over all search terms
+      getTweets(term.searchTerm, (data) => {
+      	// get new tweets for each term
+        console.log("Successful CronJob")
+        var neg = [];
 
-	// step two: call getTweets on each search term.
+        data.forEach((tweet) => {
+        	// iterate through all tweets for that term, and calculate average sentiment
+          var score = sentiment(tweet.tweetBody).score;
+          if (score < 0 ) {
+            neg.push(tweet);
+          }
+        });
 
-	// step three: getAverage set of tweets corresponding to each search term
+        var average = (neg.length/data.length) * 100
+        // save new data to database of se
+        db.save({
+          searchTerm: term.searchTerm,
+          averageScore: average,
+          searchHour: Date.now()
+        });
 
-	// step four: save average score with time stamp for each search term ( see getAverage() in index.jsx )
+      });
+    });
+  });
+	
+	
 }
 
-module.exports.getTweets = (st, cb) => {
+getTweets = (st, cb) => {
 	var oauth = new OAuth.OAuth(
 		'https://api.twitter.com/oauth/request_token',
 		'https://api.twitter.com/oauth/access_token',
@@ -40,27 +64,34 @@ module.exports.getTweets = (st, cb) => {
 	);
 
 	oauth.get(`https://api.twitter.com/1.1/search/tweets.json?q=${st}&count=100&tweet_mode=extended`, key.ACCESS_TOKEN, key.ACCESS_TOKEN_SECRET, function(e, data, res) {
-		if (e) { console.error(e) }
-		let temp = JSON.parse(data).statuses
-		let cleaned = []
-		console.log('ST IS ', st)
+		if (e) { 
+			console.error(e);
+			cb([]);
+		} else {
+			let temp = JSON.parse(data).statuses
+			let cleaned = []
+			console.log('ST IS ', st)
 
-		temp.map((tweet) => {
-			var selectedData = {
-				// score: sentiment(tweet).score,
-				searchTerm: st,
-				timeStamp: tweet.created_at,
-				// if tweet has been retweeted, its full text lives in the retweeted_status object
-				tweetBody: tweet.retweeted_status ? tweet.retweeted_status.full_text : tweet.full_text,
-				user_name: tweet.user.screen_name,
-				user_location: tweet.user.location,
-				avatar_url: tweet.user.profile_image_url
-			}
+			temp.map((tweet) => {
+				var selectedData = {
+					// score: sentiment(tweet).score,
+					searchTerm: st,
+					timeStamp: tweet.created_at,
+					// if tweet has been retweeted, its full text lives in the retweeted_status object
+					tweetBody: tweet.retweeted_status ? tweet.retweeted_status.full_text : tweet.full_text,
+					user_name: tweet.user.screen_name,
+					user_location: tweet.user.location,
+					avatar_url: tweet.user.profile_image_url
+				}
 
-			cleaned.push(selectedData)
+				cleaned.push(selectedData)
+			});
+
+		cb(cleaned);
+
+		}
 		});
-
-	cb(cleaned);
-
-	});
 }
+
+module.exports.getTweets = getTweets;
+module.exports.cronJob = cronJob;

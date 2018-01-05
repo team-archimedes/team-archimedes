@@ -9,6 +9,23 @@ let tweetSchema = mongoose.Schema({
 
 let Tweet = mongoose.model('Tweet', tweetSchema);
 
+let addToSearchTerms = (term, callback) => {
+	console.log('adding ' + term.searchTerm + ' to database of search terms.');
+  Tweet.find({searchTerm: term.searchTerm}).then((res) => {
+    if (res.length === 0) {
+      var newTerm = new Tweet(term);
+      newTerm.save(callback);
+    } else {
+      console.log('already saved!')
+    }
+  })
+}
+
+let getAllTermData = (callback) => {
+  Tweet.find().then((data) => {callback(data)});
+}
+
+
 let getAllData = (callback) => {
   Tweet.find().then((data) => {callback(data)});
 }
@@ -19,7 +36,6 @@ let save = (tweet, callback) => {
 }
 
 let find = (term, callback) => {
-	console.log('looking for results in database.');
 	Tweet.find({searchTerm: term}).then((result) => {
 		callback(result);
 	});
@@ -28,3 +44,5 @@ let find = (term, callback) => {
 module.exports.save = save;
 module.exports.getAllData = getAllData;
 module.exports.find = find;
+module.exports.addToSearchTerms = addToSearchTerms;
+module.exports.getAllTermData = getAllTermData;
