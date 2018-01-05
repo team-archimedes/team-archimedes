@@ -7,15 +7,11 @@ class BarDisplay extends React.Component {
 		super(props)
 	}
 
-	handleClick(e) {
-		e.preventDefault()
-		console.log('click')
-	}
 	render() {
 		return (
 		<div className="container horizontal rounded col col-6-of-6">
 		  <span style={{fontSize: '2em'}}>{this.props.loading ? 'Loading...' : `Reactions to ${this.props.lastSearchTerm}`}</span>
-		  <span style={{position: 'relative', float:'right', fontSize:'2em', color:'blue', textDecoration:'underline', cursor: 'pointer'}} onClick={this.handleClick}>{this.props.loading ? '' : `View History of ${this.props.lastSearchTerm}`}</span>
+		  <span style={{position: 'relative', float:'right', fontSize:'2em', color:'blue', textDecoration:'underline', cursor: 'pointer'}} onClick={this.props.showGraph}>{this.props.loading ? '' : `View History of ${this.props.lastSearchTerm}`}</span>
 		  <div className="progress-bar horizontal">
 		  <span className="negative">Negative</span><span className="positive">Positive</span>
 		    <div className="progress-track">

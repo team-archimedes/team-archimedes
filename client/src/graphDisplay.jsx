@@ -6,7 +6,7 @@ class GraphDisplay extends React.Component {
     super(props);
   }
 
-  componentDidUpdate() {
+  componentDidMount() {
     var time = [];
     var score = [];
     this.props.data.forEach((entry) => {
@@ -37,7 +37,10 @@ class GraphDisplay extends React.Component {
 
   render() {
     return (
-      <div id="Graph" style={{'height': '500px', 'width': '500px'}}></div>
+      <div>
+      <button onClick={this.props.resetGraphMode}>back</button>
+      <div id="Graph" style={{'height': '75%', 'width': '90%', 'margin': '0 auto', 'position': 'absolute'}}></div>
+      </div>
       )
   }
 }
