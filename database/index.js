@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/fetcher');
+mongoose.connect('mongodb://greenfield:greenfield@ds245347.mlab.com:45347/greenfield');
 
 let tweetSchema = mongoose.Schema({
   searchTerm: String,
@@ -9,8 +9,9 @@ let tweetSchema = mongoose.Schema({
 
 let Tweet = mongoose.model('Tweet', tweetSchema);
 
+
 let addToSearchTerms = (term, callback) => {
-	console.log('adding ' + term.searchTerm + ' to database of search terms.');
+	// console.log('adding ' + term.searchTerm + ' to database of search terms.');
   Tweet.find({searchTerm: term.searchTerm}).then((res) => {
     if (res.length === 0) {
       var newTerm = new Tweet(term);
@@ -22,7 +23,17 @@ let addToSearchTerms = (term, callback) => {
 }
 
 let getAllTermData = (callback) => {
-  Tweet.find().then((data) => {callback(data)});
+  var uniqueTerms = []
+  Tweet.find().then((data) => {
+    data.forEach((e) => {
+      if (uniqueTerms.indexOf(e.searchTerm) < 0) {
+        uniqueTerms.push(e.searchTerm)
+      } else {
+      
+      }
+    })
+    callback(uniqueTerms)
+  });
 }
 
 

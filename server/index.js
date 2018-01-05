@@ -24,14 +24,14 @@ cron.schedule('*/30 * * * *', () => {
 });
 
 var sanitizeHTML = require('sanitize-html')
-
-
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.json())
 
 app.post('/search', function(req, res) {
 
   var searchTerm = sanitizeHTML(req.body.searchTerm) || 'undefined';
+  searchTerm.split(`'`).join('').split('#').join('').split('"').join('').split('/').join('').split('`').join('')
+
   db.addToSearchTerms({searchTerm: searchTerm});
 
   getTweets(searchTerm, (data) => {
@@ -43,7 +43,6 @@ app.post('/search', function(req, res) {
 app.post('/database', function(req, res) {
   var average = req.body.average;
   var searchTerm = req.body.searchTerm;
-  console.log('average is ', average)
   if ( average !== null ) {
     db.save({
       searchTerm: searchTerm,
@@ -70,6 +69,6 @@ app.get('/database', (req, res) => {
 
 });
 
-app.listen(3000, function() {
+app.listen(process.env.PORT || 3000, function() {
   console.log('listening on port 3000!');
 });

@@ -37,9 +37,9 @@ class GraphDisplay extends React.Component {
 
   render() {
     return (
-      <div>
+      <div style={{width: '100%', height: '100%', position:'relative'}}>
       <button onClick={this.props.resetGraphMode}>back</button>
-      <div id="Graph" style={{'height': '75%', 'width': '90%', 'margin': '0 auto', 'position': 'absolute'}}></div>
+      <div id="Graph" style={{'height': '70vh', 'width': '90vh', 'margin': '0 auto', 'position': 'relative'}}></div>
       </div>
       )
   }
