@@ -17,7 +17,8 @@ class GraphDisplay extends React.Component {
     var trace = {
       x: time,
       y: score,
-      type: 'scatter'
+      type: 'scatter',
+      connectgaps: true
     };
 
     var layout = {
