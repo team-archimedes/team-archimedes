@@ -26,8 +26,5 @@ let find = (term, callback) => {
 }
 
 module.exports.save = save;
-<<<<<<< HEAD
 module.exports.getAllData = getAllData;
-=======
 module.exports.find = find;
->>>>>>> 059c28118e875080009648e19c7d91b92b49785d
