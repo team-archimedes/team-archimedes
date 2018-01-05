@@ -1,4 +1,5 @@
 import React from 'react';
+import './style/tweet.scss';
 
 class Tweet extends React.Component {
 	constructor(props){
@@ -9,14 +10,10 @@ class Tweet extends React.Component {
 	 return (
 		<li className="tweetBody">
 			<div className="header row">
-				<span className="avatar col col-1-of-6">
-					<img src={this.props.tweet.avatar_url}></img>
-				</span>
-				<span className="userName col col-4-of-6">
-					<h3>
-						<span>@</span>{this.props.tweet.user_name}
-					</h3>
-				</span>
+				<img className="avatar" src={this.props.tweet.avatar_url}></img>
+				<h3>
+					<span>@</span>{this.props.tweet.user_name}
+				</h3>
 			</div>
 
 			<div className="tweetText row">
