@@ -20,6 +20,7 @@ class Tweet extends React.Component {
 				<p className="col col-6-of-6">{this.props.tweet.tweetBody}</p>
 				<span className="timeStamp col right-3-of-6">{this.props.tweet.created_at}</span>
 			</div>
+			<hr/>
 		</li>
 		)
 	}

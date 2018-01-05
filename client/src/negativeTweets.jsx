@@ -11,13 +11,13 @@ class NegativeTweets extends React.Component {
 
   render() {
     return (
-      <Tweets className="col col-3-of-6">
+      <Tweets className="col col-3-of-6" style={{backgroundColor: 'rgba(192, 57, 43, .2)'}}>
         <div className="row">
           <div className="columnTitle col col-6-of-6">
             <h3>Negative Tweets</h3>
           </div>
           <ul>
-            {this.props.tweets.map((tweet, i) => <Tweet key={i} tweet={tweet}></Tweet>)}
+            {this.props.tweets.map((tweet, i) => <Tweet key={i} tweet={tweet}/>)}
           </ul>
         </div>
       </Tweets>
