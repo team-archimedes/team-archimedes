@@ -9,10 +9,19 @@ var bodyParser = require('body-parser');
 var request = require('request')
 var app = express();
 var axios = require('axios');
-var getTweets = require('./helper.js').getTweet; // helper function - see helper.js
-var helper = require('./helper.js');
 var db = require('../database/index.js');
 var sentiment = require('sentiment');
+var cron = require('node-cron');
+
+// helper functions - see helper.js
+var getTweets = require('./helper.js').getTweet; 
+var cronJob = require('./helper.js').cronJob;
+
+
+cron.schedule('* * * * *', () => {
+  // call helper function every hour
+  cronJob();
+});
 
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.json())
@@ -21,7 +30,7 @@ app.post('/search', function(req, res) {
   var searchTerm = req.body.searchTerm;
   console.log("searchTerm ", searchTerm)
 
-  helper.getTweets(searchTerm, (data) => {
+  getTweets(searchTerm, (data) => {
     res.send(data)
   })
 

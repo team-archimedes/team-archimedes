@@ -7,11 +7,26 @@
 // oauth module docs: https://www.npmjs.com/package/oauth
 // twitter api docs: https://developer.twitter.com/en/docs/basics/authentication/guides/authorizing-a-request
 //
+// cronJob() does the work of grabbing all searchTerms out of the database and then calling getTweets() on 
+// each searchTerm, in order to get a richer data set over time.
+//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var OAuth = require ('oauth');
 var key = require ('../config/twitter.js');
 var sentiment = require('sentiment');
+var db = require('../database/index.js');
+
+module.exports.cronJob = () => {
+	console.log('cronJob!');
+	// step one: query database for all search terms.
+
+	// step two: call getTweets on each search term.
+
+	// step three: getAverage set of tweets corresponding to each search term
+
+	// step four: save average score with time stamp for each search term ( see getAverage() in index.jsx )
+}
 
 module.exports.getTweets = (st, cb) => {
 	var oauth = new OAuth.OAuth(
