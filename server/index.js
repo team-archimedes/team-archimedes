@@ -23,14 +23,19 @@ cron.schedule('*/30 * * * *', () => {
   cronJob();
 });
 
+var sanitizeHTML = require('sanitize-html')
+
+
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.json())
 
 app.post('/search', function(req, res) {
-  var searchTerm = req.body.searchTerm;
+
+  var searchTerm = sanitizeHTML(req.body.searchTerm) || 'undefined';
   db.addToSearchTerms({searchTerm: searchTerm});
 
   getTweets(searchTerm, (data) => {
+  helper.getTweets(searchTerm, (data) => {
     res.send(data)
   });
 
@@ -65,15 +70,7 @@ app.get('/database', (req, res) => {
   });
 
 });
-// searchTerm: tweet.searchTerm,
-// score: sentiment(tweet.tweetBody).score,
-// timeStamp: tweet.timeStamp,
-// tweetBody: tweet.tweetBody,
-// user_name: tweet.user_name,
-// user_location: tweet.user_location,
-// avatar_url: tweet.avatar_url
 
-// })
 app.listen(3000, function() {
   console.log('listening on port 3000!');
 });

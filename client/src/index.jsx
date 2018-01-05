@@ -23,8 +23,9 @@ class App extends React.Component {
       previousSearches: [],
       average: 50,
       searchTerm: '',
-      lastSearchTerm: 'trump',
-      graphData: []
+      lastSearchTerm: 'flock',
+      graphData: [],
+      loading:false
   	}
     this.getAverage = this.getAverage.bind(this);
     this.getAllTweets = this.getAllTweets.bind(this)
@@ -112,10 +113,12 @@ class App extends React.Component {
 
   componentWillMount() {
     // default search for trump.
-    this.getAllTweets('trump');
+    this.getAllTweets('flock');
   }
 
   render () {
+    if (!this.state.loading) {
+
   	return (
       <div className="row">
         <div className="siteNav header col col-6-of-6">
@@ -130,6 +133,8 @@ class App extends React.Component {
         <GraphDisplay data={this.state.graphData} term={this.state.lastSearchTerm}/>
       </div>
     )
+      
+    }
   }
 }
 
