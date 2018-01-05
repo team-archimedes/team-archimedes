@@ -35,7 +35,6 @@ app.post('/search', function(req, res) {
   db.addToSearchTerms({searchTerm: searchTerm});
 
   getTweets(searchTerm, (data) => {
-  helper.getTweets(searchTerm, (data) => {
     res.send(data)
   });
 
