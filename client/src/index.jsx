@@ -26,21 +26,30 @@ class App extends React.Component {
       searchTerm: '',
       lastSearchTerm: 'flock',
       graphData: [],
+      graphMode: false, // when user clicks 'view history of ___', changes to true and renders graphDisplay 
       loading:true
   	}
     this.getAverage = this.getAverage.bind(this);
     this.getAllTweets = this.getAllTweets.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this);
     this.submitQuery = this.submitQuery.bind(this);
-
-    this.getPreviousSearches = this.getPreviousSearches.bind(this);
     this.getHistory = this.getHistory.bind(this);
+    this.showGraph = this.showGraph.bind(this);
+    this.resetGraphMode = this.resetGraphMode.bind(this);
+  }
 
-    // setTimeout(() => {
-    //   this.setState({
-    //     loading: false
-    //   })
-    // },1000)
+  showGraph(e) {
+    e.preventDefault()
+    this.setState({
+      graphMode: true
+    });
+  }
+
+  resetGraphMode(e) {
+    e.preventDefault();
+    this.setState({
+      graphMode: false
+    });
   }
 
   handleInputChange(e) {
@@ -51,7 +60,6 @@ class App extends React.Component {
   }
 
   getHistory() {
-    // come back and change from pizza to term.
     axios.get('/database', {params:{searchTerm: this.state.lastSearchTerm}}).then((response) => {
       console.log('response.data: ', response.data);
       this.setState({
@@ -73,7 +81,6 @@ class App extends React.Component {
     });
 
     axios.post('/search', {searchTerm: term}).then((res) => {
-      // console.log("res ", res.data);
       this.setState({
         tweets: res.data,
         lastSearchTerm: term,
@@ -82,7 +89,6 @@ class App extends React.Component {
         loading: false
       });
       this.getAverage(this.state.tweets, term);
-      this.getPreviousSearches();
       this.getHistory();
     });
   }
@@ -110,35 +116,41 @@ class App extends React.Component {
     axios.post('/database', {average: newAverage, searchTerm: searchTerm});
   }
 
-  getPreviousSearches() {
-    axios.get('/previousSearches').then((res) => {
-      this.setState({
-        previousSearches: res.data
-      })
-    })
-  }
-
   componentWillMount() {
-    // default search for trump.
+    // default search.
     this.getAllTweets('flock');
   }
 
   render () {
     if (!this.state.loading) {
-  	return (
-      <div className="row">
-        <div className="siteNav header col col-6-of-6">
-          <h1>What the Flock?</h1>
-          <img src="./images/poop_logo.png" alt="" className="logo"/>
-        </div>
-        <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
-        <div id="error"></div>
-        <BarDisplay percentage={this.state.average} lastSearchTerm={this.state.lastSearchTerm} loading={this.state.loading}/>
-        <NegativeTweets className="tweetColumns row" tweets={this.state.negativeTweets}/>
-        <PositiveTweets className="tweetColumns row" tweets={this.state.positiveTweets}/>
-        {/*<GraphDisplay data={this.state.graphData} term={this.state.lastSearchTerm}/>*/}
-      </div>
-    )
+      if(!this.state.graphMode) {
+        return (
+          <div className="row">
+            <div className="siteNav header col col-6-of-6">
+              <h1>What the Flock?</h1>
+              <img src="./images/poop_logo.png" alt="" className="logo"/>
+            </div>
+            <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
+            <div id="error"></div>
+            <BarDisplay percentage={this.state.average} lastSearchTerm={this.state.lastSearchTerm} loading={this.state.loading} showGraph={this.showGraph}/>
+            <NegativeTweets className="tweetColumns row" tweets={this.state.negativeTweets}/>
+            <PositiveTweets className="tweetColumns row" tweets={this.state.positiveTweets}/>
+            {/*<GraphDisplay data={this.state.graphData} term={this.state.lastSearchTerm}/>*/}
+          </div>
+        )
+      } else {
+        	return (
+            <div className="row">
+              <div className="siteNav header col col-6-of-6">
+                <h1>What the Flock?</h1>
+                <img src="./images/poop_logo.png" alt="" className="logo"/>
+              </div>
+              <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
+              <div id="error"></div>
+              <GraphDisplay data={this.state.graphData} term={this.state.lastSearchTerm} resetGraphMode={this.resetGraphMode}/>
+            </div>
+          )
+      }
       
     } else {
       return(
