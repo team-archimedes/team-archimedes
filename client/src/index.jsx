@@ -7,6 +7,7 @@ import GraphDisplay from './GraphDisplay.jsx';
 import BarDisplay from './barDisplay.jsx';
 import Search from './Search.jsx';
 import PreviousSearches from './PreviousSearches.jsx';
+import Loader from './loader.jsx';
 import axios from 'axios';
 import bodyParser from 'body-parser';
 import sentiment from 'sentiment';
@@ -25,7 +26,7 @@ class App extends React.Component {
       searchTerm: '',
       lastSearchTerm: 'flock',
       graphData: [],
-      loading:false
+      loading:true
   	}
     this.getAverage = this.getAverage.bind(this);
     this.getAllTweets = this.getAllTweets.bind(this)
@@ -35,6 +36,11 @@ class App extends React.Component {
     this.getPreviousSearches = this.getPreviousSearches.bind(this);
     this.getHistory = this.getHistory.bind(this);
 
+    // setTimeout(() => {
+    //   this.setState({
+    //     loading: false
+    //   })
+    // },1000)
   }
 
   handleInputChange(e) {
@@ -72,7 +78,8 @@ class App extends React.Component {
         tweets: res.data,
         lastSearchTerm: term,
         searchTerm: '',
-        previousSearches: [...this.state.previousSearches, term]
+        previousSearches: [...this.state.previousSearches, term],
+        loading: false
       });
       this.getAverage(this.state.tweets, term);
       this.getPreviousSearches();
@@ -118,7 +125,6 @@ class App extends React.Component {
 
   render () {
     if (!this.state.loading) {
-
   	return (
       <div className="row">
         <div className="siteNav header col col-6-of-6">
@@ -127,13 +133,26 @@ class App extends React.Component {
         </div>
         <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
         <div id="error"></div>
-        <BarDisplay percentage={this.state.average} lastSearchTerm={this.state.lastSearchTerm}/>
+        <BarDisplay percentage={this.state.average} lastSearchTerm={this.state.lastSearchTerm} loading={this.state.loading}/>
         <NegativeTweets className="tweetColumns row" tweets={this.state.negativeTweets}/>
         <PositiveTweets className="tweetColumns row" tweets={this.state.positiveTweets}/>
-        <GraphDisplay data={this.state.graphData} term={this.state.lastSearchTerm}/>
+        {/*<GraphDisplay data={this.state.graphData} term={this.state.lastSearchTerm}/>*/}
       </div>
     )
       
+    } else {
+      return(
+        <div className="row">
+        <div className="siteNav header col col-6-of-6">
+          <h1>What the Flock?</h1>
+          <img src="./images/poop_logo.png" alt="" className="logo"/>
+        </div>
+        <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
+        <div id="error"></div>
+        <BarDisplay percentage={this.state.average} lastSearchTerm={this.state.lastSearchTerm} loading={this.state.loading}/>
+        <Loader/>
+      </div>
+      )
     }
   }
 }
