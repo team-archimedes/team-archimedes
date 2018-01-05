@@ -27,7 +27,7 @@ class App extends React.Component {
       lastSearchTerm: 'flock',
       graphData: [],
       graphMode: false, // when user clicks 'view history of ___', changes to true and renders graphDisplay 
-      loading:true
+      loading: true
   	}
     this.getAverage = this.getAverage.bind(this);
     this.getAllTweets = this.getAllTweets.bind(this)
@@ -77,7 +77,9 @@ class App extends React.Component {
     // first reset state so that new tweets will render properly.
     this.setState({
       negativeTweets: [],
-      positiveTweets: []
+      positiveTweets: [],
+      loading: true,
+      graphMode: false
     });
 
     axios.post('/search', {searchTerm: term}).then((res) => {
@@ -135,7 +137,6 @@ class App extends React.Component {
             <BarDisplay percentage={this.state.average} lastSearchTerm={this.state.lastSearchTerm} loading={this.state.loading} showGraph={this.showGraph}/>
             <NegativeTweets className="tweetColumns row" tweets={this.state.negativeTweets}/>
             <PositiveTweets className="tweetColumns row" tweets={this.state.positiveTweets}/>
-            {/*<GraphDisplay data={this.state.graphData} term={this.state.lastSearchTerm}/>*/}
           </div>
         )
       } else {
