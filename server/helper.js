@@ -21,10 +21,11 @@ cronJob = () => {
 	console.log('cronJob!');
 	
 	db.getAllTermData((res) => {
+  console.log(res)
 	// step one - get all search terms
     res.forEach((term) => {
     // iterate over all search terms
-      getTweets(term.searchTerm, (data) => {
+      getTweets(term, (data) => {
       	// get new tweets for each term
         console.log("Successful CronJob")
         var neg = [];
