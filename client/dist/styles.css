@@ -37,6 +37,10 @@
   float:right;
 } */
 
+.horizontal .progress-fill {
+  transition: width 2s
+}
+
 ul {
   list-style-type: none;
   padding: 0;
