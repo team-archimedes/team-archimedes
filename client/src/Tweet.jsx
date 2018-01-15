@@ -8,7 +8,7 @@ class Tweet extends React.Component {
 
 	render(){
 	 return (
-		<li className="tweetBody">
+		<div className="tweetBody">
 			<div className="header row">
 				<img className="avatar" src={this.props.tweet.avatar_url}></img>
 				<h3>
@@ -21,7 +21,7 @@ class Tweet extends React.Component {
 				<span className="timeStamp col right-3-of-6">{this.props.tweet.created_at}</span>
 			</div>
 			<hr/>
-		</li>
+		</div>
 		)
 	}
 }

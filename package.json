@@ -40,6 +40,7 @@
     "plotly.js": "^1.31.2",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
+    "react-dragula": "^1.1.17",
     "request": "^2.83.0",
     "sanitize-html": "^1.16.3",
     "sentiment": "^4.1.0",
