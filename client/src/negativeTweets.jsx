@@ -8,11 +8,15 @@ const Tweets = styled.div``;
 class NegativeTweets extends React.Component {
   constructor(props) {
     super(props);
+    this.dragulaDecorator = this.dragulaDecorator.bind(this);
+    this.dragulaDecorator = this.dragulaDecorator.bind(this);
   }
-  dragulaDecorator (componentBackingInstance) {
+
+  dragulaDecorator (componentBackingInstance, func = this.props.drag) {
     if (componentBackingInstance) {
       let options = {};
-      dragula([componentBackingInstance, document.querySelector('.positive-tweets')], options);
+      dragula([componentBackingInstance, document.querySelector('.positive-tweets'), document.querySelector('.save')], options)
+      .on('drop',(el) => func(el));
     }
   }
 
@@ -24,7 +28,7 @@ class NegativeTweets extends React.Component {
             <h3>Negative Tweets</h3>
           </div>
           <div ref={this.dragulaDecorator} id="negative-tweets">
-            {this.props.tweets.map((tweet, i) => <Tweet key={i} tweet={tweet}/>)}
+            {this.props.tweets.map((tweet, i) => <Tweet data={i} type="negativeTweets" key={i} tweet={tweet}/>)}
           </div>
         </div>
       </Tweets>

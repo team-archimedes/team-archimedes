@@ -14,6 +14,7 @@ import sentiment from 'sentiment';
 import styled from 'styled-components';
 import './style/baseStyle.scss';
 import dragula from 'react-dragula';
+import SaveTweet from './saveTweet.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -28,7 +29,8 @@ class App extends React.Component {
       lastSearchTerm: 'flock',
       graphData: [],
       graphMode: false, // when user clicks 'view history of ___', changes to true and renders graphDisplay 
-      loading: true
+      loading: true,
+      savedTweets: [],
   	}
     this.getAverage = this.getAverage.bind(this);
     this.getAllTweets = this.getAllTweets.bind(this)
@@ -37,6 +39,7 @@ class App extends React.Component {
     this.getHistory = this.getHistory.bind(this);
     this.showGraph = this.showGraph.bind(this);
     this.resetGraphMode = this.resetGraphMode.bind(this);
+    this.handleDrag = this.handleDrag.bind(this);
   }
 
   showGraph(e) {
@@ -96,22 +99,24 @@ class App extends React.Component {
     });
   }
 
-  getAverage(tweets, searchTerm) {
-    tweets.map((message) => {
-      var score = sentiment(message.tweetBody).score;
-      message.score = score;
-      if ( score < 0 ) {
-        // add negative tweets to negativeTweets array
-        this.setState({
-          negativeTweets: [...this.state.negativeTweets, message]
-        });
-      } else if ( score > 0 ) {
-        // add positive tweets to positiveTweets array
-        this.setState({
-          positiveTweets: [...this.state.positiveTweets, message]
-        });
-      }
-    });
+  getAverage(tweets, searchTerm = 'flock') {
+    if (arguments.length > 1) {
+      tweets.map((message) => {
+        var score = sentiment(message.tweetBody).score;
+        message.score = score;
+        if ( score < 0 ) {
+          // add negative tweets to negativeTweets array
+          this.setState({
+            negativeTweets: [...this.state.negativeTweets, message]
+          });
+        } else if ( score > 0 ) {
+          // add positive tweets to positiveTweets array
+          this.setState({
+            positiveTweets: [...this.state.positiveTweets, message]
+          });
+        }
+      });
+    }
     var newAverage = (this.state.negativeTweets.length / this.state.tweets.length) * 100
     this.setState({
       average: newAverage
@@ -122,8 +127,25 @@ class App extends React.Component {
   dragulaDecorator (componentBackingInstance) {
     if (componentBackingInstance) {
       let options = {};
-      dragula([componentBackingInstance], options);
+      dragula([componentBackingInstance], options)
+      .on('drop', () => console.log('drop'));
     }
+  }
+
+  handleDrag(element) {
+    let idx = $(element).data('key');
+    let type = $(element).data('type');
+    let positiveTweets = this.state.positiveTweets;
+    let negativeTweets = this.state.negativeTweets;
+    console.log('dropped')
+    console.log(this.state.positiveTweets.length)
+    if(type === 'positiveTweets') {
+      negativeTweets.push(positiveTweets.splice(idx, 1));
+    }
+    this.setState({
+      negativeTweets,
+      positiveTweets,
+    }, () => this.getAverage())
   }
 
   componentWillMount() {
@@ -139,12 +161,13 @@ class App extends React.Component {
             <div className="siteNav header col col-6-of-6">
               <h1>What the Flock?</h1>
               <img src="./images/poop_logo.png" alt="" className="logo"/>
+              <SaveTweet/>
             </div>
             <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
             <div id="error"></div>
             <BarDisplay percentage={this.state.average} lastSearchTerm={this.state.lastSearchTerm} loading={this.state.loading} showGraph={this.showGraph}/>
-            <NegativeTweets className="tweetColumns row" tweets={this.state.negativeTweets}/>
-            <PositiveTweets className="tweetColumns row" tweets={this.state.positiveTweets}/>
+            <NegativeTweets className="tweetColumns row" drag={this.handleDrag} tweets={this.state.negativeTweets}/>
+            <PositiveTweets className="tweetColumns row" drag={this.handleDrag} tweets={this.state.positiveTweets}/>
           </div>
         )
       } else {

@@ -8,7 +8,7 @@ class Tweet extends React.Component {
 
 	render(){
 	 return (
-		<div className="tweetBody">
+		<div className="tweetBody" data-key={this.props.data} data-type={this.props.type}>
 			<div className="header row">
 				<img className="avatar" src={this.props.tweet.avatar_url}></img>
 				<h3>

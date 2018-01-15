@@ -67,6 +67,11 @@ ul {
   }
 }
 
+.save {
+  float:right;
+  opacity: 0.2;
+}
+
 
 /*.rounded .progress-track,
 .rounded .progress-fill {
