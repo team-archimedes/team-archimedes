@@ -13,6 +13,7 @@ import bodyParser from 'body-parser';
 import sentiment from 'sentiment';
 import styled from 'styled-components';
 import './style/baseStyle.scss';
+import dragula from 'react-dragula';
 
 class App extends React.Component {
   constructor(props) {
@@ -116,6 +117,13 @@ class App extends React.Component {
       average: newAverage
     });
     axios.post('/database', {average: newAverage, searchTerm: searchTerm});
+  }
+
+  dragulaDecorator (componentBackingInstance) {
+    if (componentBackingInstance) {
+      let options = {};
+      dragula([componentBackingInstance], options);
+    }
   }
 
   componentWillMount() {
