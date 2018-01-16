@@ -14,7 +14,13 @@ class NegativeTweets extends React.Component {
     if (componentBackingInstance) {
       let options = {};
       dragula([componentBackingInstance, document.querySelector('.positive-tweets')], options)
-      .on('drop',(el) => func(el));
+      .on('drop',(el, target, source) => {
+        console.log(componentBackingInstance)
+        if(source === componentBackingInstance && target === document.querySelector('.positive-tweets')) {
+          func(el)
+          
+        }
+      });
     }
   }
 

@@ -42,6 +42,7 @@ class App extends React.Component {
     this.resetGraphMode = this.resetGraphMode.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
     this.handleSave = this.handleSave.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
   }
 
   showGraph(e) {
@@ -131,27 +132,40 @@ class App extends React.Component {
     }
   }
 
-  handleDrag(element) {
-    let idx = $(element).data('key');
-    let type = $(element).data('type');
-    let positiveTweets = this.state.positiveTweets;
-    let negativeTweets = this.state.negativeTweets;
-    let tweet;
-    if (type === 'positiveTweets') {
-      $(tweet).data('type', 'negativeTweets')
-      tweet = positiveTweets.splice(idx, 1)[0]
-      negativeTweets.splice(idx, 0, tweet)
-    } else if (type === 'negativeTweets') {
-      $(tweet).data('type', 'positiveTweets')
-      tweet = negativeTweets.splice(idx, 1)[0]
-      positiveTweets.splice(idx, 0, tweet);
-    }
+  handleUpdate(positiveTweets, negativeTweets) {
     this.setState({
       negativeTweets,
       positiveTweets,
+      tweets: negativeTweets.concat(positiveTweets)
     }, () => {
       this.getAverage(this.state.tweets, 'flock')
     })
+  }
+
+  handleDrag(element) {
+    let idx = $(element).data('key');
+    let type = $(element).data('type');
+    console.log('init type', type)
+    let positiveTweets = this.state.positiveTweets;
+    let negativeTweets = this.state.negativeTweets;
+    let tweet;
+
+    if (type === 'positiveTweets') {
+      $(element).data('type', 'negativeTweets')
+      tweet = positiveTweets.splice(idx, 1)[0]
+      console.log('hello')
+      tweet.score = -tweet.score
+      negativeTweets.splice(idx, 0, tweet)
+      return this.handleUpdate(positiveTweets, negativeTweets);
+
+    } else if (type === 'negativeTweets') {
+      tweet = negativeTweets.splice(idx, 1)[0]
+      console.log($(element).data('type'))
+      $(element).data('type', 'positiveTweets')
+      tweet.score = -tweet.score
+      positiveTweets.splice(idx, 0, tweet);
+      return this.handleUpdate(positiveTweets, negativeTweets);
+    }
   }
 
   handleSave(element) {
