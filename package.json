@@ -48,6 +48,8 @@
     "react-dnd-html5-backend": "^2.5.4",
     "react-dom": "^15.4.2",
     "react-dragula": "^1.1.17",
+    "react-form-validator-core": "^0.4.1",
+    "react-material-ui-form-validator": "^1.0.7",
     "react-modal": "^3.1.10",
     "request": "^2.83.0",
     "sanitize-html": "^1.16.3",

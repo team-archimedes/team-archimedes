@@ -1,7 +1,11 @@
 import React from 'react';
 import { Card, CardText } from 'material-ui/Card';
-import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import Modal from 'react-modal';
+import { ValidatorForm } from 'react-form-validator-core';
+import { TextValidator} from 'react-material-ui-form-validator';
+import axios form 'axios';
+import Cookies from 'universal-cookie';
 
 export default class UserModal extends React.Component {
   constructor() {
@@ -13,6 +17,7 @@ export default class UserModal extends React.Component {
       }
     }
     this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(event) {
@@ -21,30 +26,49 @@ export default class UserModal extends React.Component {
     user[field] = event.target.value;
     this.setState({
       user
-    }, () => console.log(this.state.user))
+    })
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    axios.post('/login',{ this.state.user })
+    .then(response => {
+      const cookies = new Cookies();
+      cookies.set('userId', response.userId);
+    })
+    .catch(error => {
+      console.error('There was an error:', error)
+    })
   }
 
   render() {
+    const { username, email } = this.state.user
     return (
       <Card>
-        <form onSubmit={this.onSubmit}>
-          <div>
-            <TextField
-              value={this.state.username}
-              name="username"
-              floatingLabelText="Username"
-              onChange={this.handleChange}
-            />
-            <TextField
-              value={this.state.email}
-              name="email"
-              floatingLabelText="Email"
-              onChange={this.handleChange}
-            />
-          </div>
+        <ValidatorForm
+            ref="form"
+            onSubmit={this.handleSubmit}
+            onError={errors => console.log(errors)}
+        >
+          <TextValidator
+            floatingLabelText="Username"
+            onChange={this.handleChange}
+            name="username"
+            value={username}
+            validators={['required']}
+            errorMessages={['this field is required']}
+          />
+          <TextValidator
+            floatingLabelText="Email"
+            onChange={this.handleChange}
+            name="email"
+            value={email}
+            validators={['required', 'isEmail']}
+            errorMessages={['this field is required', 'email is not valid']}
+          />
           <RaisedButton type="submit" label="Submit" primary />
-        </form>
+        </ValidatorForm>
       </Card>
-    )
+    );
   }
 }

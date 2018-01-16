@@ -244,6 +244,7 @@ class App extends React.Component {
         return (
           <MuiThemeProvider>
           <div className="row">
+          <UserModal/>
             <div className="siteNav header col col-6-of-6">
               <h1>What the Flock?</h1>
               <img src="./images/poop_logo.png" alt="" className="logo"/>
