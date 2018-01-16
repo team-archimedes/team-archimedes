@@ -15,13 +15,11 @@ const Types = {
 
 const itemSource = {
 	beginDrag(props, monitor, component) {
-		console.log(component)
 		component.props.dragging();
 		const item = {idx: props.id, type: props.type};
 		return item;
 	}, 
 	endDrag(props, monitor, component) {
-
 		component.props.dragging();
 		if (!monitor.didDrop()) {
 			return;
@@ -69,7 +67,7 @@ class Tweet extends React.Component {
 	const { isDragging, connectDragSource } = this.props
 	return connectDragSource(
 		<div className="tweetBody" data-key={this.props.data} data-type={this.props.type}>
-		
+
 			<IconButton
 					iconStyle={styles.smallIcon}
 					style={Object.assign(styles.small, styles.profilebutton)}
