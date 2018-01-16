@@ -19,7 +19,8 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Modal from 'react-modal';
 import IconButton from 'material-ui/IconButton';
 import ActionNavigationClose from 'material-ui/svg-icons/navigation/close';
-
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
 class App extends React.Component {
   constructor(props) {
@@ -37,7 +38,8 @@ class App extends React.Component {
       loading: true,
       savedTweets: [],
       clicked: false,
-      clickedUser: ''
+      clickedUser: '',
+      isDragging: false,
   	}
     this.getAverage = this.getAverage.bind(this);
     this.getAllTweets = this.getAllTweets.bind(this)
@@ -46,6 +48,8 @@ class App extends React.Component {
     this.getHistory = this.getHistory.bind(this);
     this.showGraph = this.showGraph.bind(this);
     this.resetGraphMode = this.resetGraphMode.bind(this);
+    this.handleDrop = this.handleDrop.bind(this);
+    this.handleSave = this.handleSave.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
   }
@@ -117,24 +121,22 @@ class App extends React.Component {
     });
   }
 
-  getAverage(tweets, searchTerm = 'flock') {
-    if (arguments.length > 1) {
-      tweets.map((message) => {
-        var score = sentiment(message.tweetBody).score;
-        message.score = score;
-        if ( score < 0 ) {
-          // add negative tweets to negativeTweets array
-          this.setState({
-            negativeTweets: [...this.state.negativeTweets, message]
-          });
-        } else if ( score > 0 ) {
-          // add positive tweets to positiveTweets array
-          this.setState({
-            positiveTweets: [...this.state.positiveTweets, message]
-          });
-        }
-      });
-    }
+  getAverage(tweets, searchTerm) {
+    tweets.map((message) => {
+      var score = sentiment(message.tweetBody).score;
+      message.score = score;
+      if ( score < 0 ) {
+        // add negative tweets to negativeTweets array
+        this.setState({
+          negativeTweets: [...this.state.negativeTweets, message]
+        });
+      } else if ( score > 0 ) {
+        // add positive tweets to positiveTweets array
+        this.setState({
+          positiveTweets: [...this.state.positiveTweets, message]
+        });
+      }
+    });
     var newAverage = (this.state.negativeTweets.length / this.state.tweets.length) * 100
     this.setState({
       average: newAverage
@@ -142,32 +144,48 @@ class App extends React.Component {
     axios.post('/database', {average: newAverage, searchTerm: searchTerm});
   }
 
-  dragulaDecorator (componentBackingInstance) {
-    if (componentBackingInstance) {
-      let options = {};
-      dragula([componentBackingInstance], options)
-      .on('drop', () => console.log('drop'));
-    }
-  }
-
-  handleDrag(element) {
-    let idx = $(element).data('key');
-    let type = $(element).data('type');
+  handleDrop({idx, type}) {
     let positiveTweets = this.state.positiveTweets;
     let negativeTweets = this.state.negativeTweets;
-    console.log('dropped')
-    console.log(this.state.positiveTweets.length)
-    if(type === 'positiveTweets') {
-      negativeTweets.push(positiveTweets.splice(idx, 1));
+    let tweet;
+    if (type === 'positiveTweets') {
+      tweet = positiveTweets.splice(idx, 1)[0]
+      tweet.score = -tweet.score
+      negativeTweets.splice(idx, 0, tweet)
+
+    } else if (type === 'negativeTweets') {
+      tweet = negativeTweets.splice(idx, 1)[0]
+      tweet.score = -tweet.score
+      positiveTweets.splice(idx, 0, tweet);
     }
     this.setState({
       negativeTweets,
       positiveTweets,
-    }, () => this.getAverage())
+      tweets: negativeTweets.concat(positiveTweets)
+    }, () => {
+      this.getAverage(this.state.tweets, 'flock')
+    })
+  }
+
+  handleSave({ idx, type }) {
+    let tweet;
+    if(type === 'positiveTweets') {
+      tweet = this.state.positiveTweets.slice(idx, 1);
+    } else {
+      tweet = this.state.negativeTweets.slice(idx, 1);
+    }
+    this.setState({
+      savedTweets: this.state.savedTweets.concat(tweet)
+    }, ()=> console.log(this.state.savedTweets))
+  }
+
+  handleDrag() {
+    this.setState({
+      isDragging: !this.state.isDragging
+    })
   }
 
   componentWillMount() {
-    // default search.
     this.getAllTweets('flock');
   }
 
@@ -218,6 +236,7 @@ class App extends React.Component {
         padding: 20
       }
     };
+
     if (!this.state.loading) {
       if(!this.state.graphMode) {
         return (
@@ -226,7 +245,6 @@ class App extends React.Component {
             <div className="siteNav header col col-6-of-6">
               <h1>What the Flock?</h1>
               <img src="./images/poop_logo.png" alt="" className="logo"/>
-              <SaveTweet/>
             </div>
             <Modal
               isOpen={this.state.clicked}
@@ -256,9 +274,10 @@ class App extends React.Component {
             </Modal>
             <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
             <div id="error"></div>
+            <SaveTweet save={this.handleSave} isDraggingging={this.state.isDraggingging}/>
             <BarDisplay percentage={this.state.average} lastSearchTerm={this.state.lastSearchTerm} loading={this.state.loading} showGraph={this.showGraph}/>
-            <NegativeTweets className="tweetColumns row" drag={this.handleDrag} clickHandler={this.clickHandler} tweets={this.state.negativeTweets}/>
-            <PositiveTweets className="tweetColumns row" drag={this.handleDrag} clickHandler={this.clickHandler} tweets={this.state.positiveTweets}/>
+            <NegativeTweets className="tweetColumns row" dragging={this.handleDrag} drop={this.handleDrop} clickHandler={this.clickHandler} tweets={this.state.negativeTweets}/>
+            <PositiveTweets className="tweetColumns row" dragging={this.handleDrag} drop={this.handleDrop} clickHandler={this.clickHandler} tweets={this.state.positiveTweets}/>
           </div>
           </MuiThemeProvider>
         )
@@ -293,4 +312,4 @@ class App extends React.Component {
   }
 }
 
-ReactDOM.render(<App />, document.getElementById('app'));
+export default DragDropContext(HTML5Backend)(App)

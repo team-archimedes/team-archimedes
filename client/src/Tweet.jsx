@@ -1,4 +1,5 @@
 import React from 'react';
+import { DragSource } from 'react-dnd';
 import './style/tweet.scss';
 import IconButton from 'material-ui/IconButton';
 import ActionAccountCircles from 'material-ui/svg-icons/action/account-circle';
@@ -7,6 +8,39 @@ import ActionAccountCircles from 'material-ui/svg-icons/action/account-circle';
  * npm install react-modal
  * npm install material-ui
  */
+
+const Types = {
+	item: 'tweet',
+}
+
+const itemSource = {
+	beginDrag(props, monitor, component) {
+		console.log(component)
+		component.props.dragging();
+		const item = {idx: props.id, type: props.type};
+		return item;
+	}, 
+	endDrag(props, monitor, component) {
+
+		component.props.dragging();
+		if (!monitor.didDrop()) {
+			return;
+		}
+		const item = monitor.getItem()
+		const dropResult = monitor.getDropResult();
+
+	},
+	isDragging(props, monitor) {
+		return monitor.getItem().id = props.id
+	}
+}
+
+function collect(connect, monitor) {
+	return {
+		connectDragSource: connect.dragSource(),
+		isDragging: monitor.isDragging()
+	}
+}
 
 class Tweet extends React.Component {
 	constructor(props){
@@ -32,15 +66,18 @@ class Tweet extends React.Component {
 			}
 		};
 			
-	 return (
+	const { isDragging, connectDragSource } = this.props
+	return connectDragSource(
 		<div className="tweetBody" data-key={this.props.data} data-type={this.props.type}>
-				<IconButton
-						iconStyle={styles.smallIcon}
-						style={Object.assign(styles.small, styles.profilebutton)}
-						onClick={() => {this.props.clickHandler(this.props.tweet.user_name)}}
-					>
-          <ActionAccountCircles/>
-        </IconButton> 
+		
+			<IconButton
+					iconStyle={styles.smallIcon}
+					style={Object.assign(styles.small, styles.profilebutton)}
+					onClick={() => {this.props.clickHandler(this.props.tweet.user_name)}}
+				>
+        <ActionAccountCircles/>
+      </IconButton> 
+
 			<div className="header row">
 				<img className="avatar" src={this.props.tweet.avatar_url}></img>
 				<h3>
@@ -58,4 +95,6 @@ class Tweet extends React.Component {
 	}
 }
 
-export default Tweet;
+// export default Tweet;
+
+export default DragSource(Types.item, itemSource, collect)(Tweet);

@@ -1,42 +1,54 @@
 import React from 'react';
 import styled from 'styled-components';
 import Tweet from './Tweet.jsx';
-import dragula from 'react-dragula';
+import { DropTarget } from 'react-dnd'
+import { handleDrag } from './index.jsx';
 const Tweets = styled.div``;
+
+const Types = {
+  item: 'tweet'
+}
+
+const collect = function(connect, monitor) {
+  return {
+    connectDropTarget: connect.dropTarget(),
+    canDrop: monitor.canDrop()
+  }
+}
+
+const tweetsTarget = {
+  canDrop(props, monitor) {
+    const item = monitor.getItem();
+    return item
+  },
+  drop(props, monitor, component) {
+    component.props.drop(monitor.getItem())
+  }
+}
 
 class PositiveTweets extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      item: null
-    }
-    this.dragulaDecorator = this.dragulaDecorator.bind(this);
   }
-
-  dragulaDecorator (componentBackingInstance, func = this.props.drag) {
-    if (componentBackingInstance) {
-      let options = {};
-      dragula([componentBackingInstance, document.querySelector('.negative-tweets'), document.querySelector('.save')], options)
-      .on('drop',(el) => func(el));
-    }
-  }
-
   render() {
-    return (
-      <Tweets className="col col-3-of-6" style={{backgroundColor: 'rgba(39, 174, 96, .2'}}>
-        <div className="row">
-          <div className="columnTitle col col-6-of-6">
-            <h3>Positive Tweets</h3>
+    const { connectDropTarget } = this.props;
+    return connectDropTarget(
+      <div className="col col-3-of-6" style={{backgroundColor: 'rgba(39, 174, 96, .2'}}>
+        <Tweets>
+          <div className="row">
+            <div className="columnTitle col col-6-of-6">
+              <h3>Positive Tweets</h3>
+            </div>
+            <div>
+              {this.props.tweets.map((tweet, i) => <Tweet id={i} clickHandler={this.props.clickHandler} dragging={this.props.dragging} type="positiveTweets" key={i} tweet={tweet} />)}
+            </div>
           </div>
-          <div ref={this.dragulaDecorator} className="positive-tweets">
-            {this.props.tweets.map((tweet, i) => <Tweet data={i} type="positiveTweets" clickHandler={this.props.clickHandler} key={i} tweet={tweet} />)}
-          </div>
-        </div>
-      </Tweets>
+        </Tweets>
+      </div>
     )
   }
 
 }
 
 
-export default PositiveTweets;
+export default DropTarget(Types.item, tweetsTarget, collect)(PositiveTweets);
