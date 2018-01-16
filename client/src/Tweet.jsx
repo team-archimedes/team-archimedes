@@ -8,7 +8,7 @@ const Types = {
 
 const itemSource = {
 	beginDrag(props, monitor, component) {
-		const item = {id: props.id};
+		const item = {idx: props.id, type: props.type};
 		return item;
 	}, 
 	endDrag(props, monitor, component) {

@@ -126,22 +126,18 @@ class App extends React.Component {
     axios.post('/database', {average: newAverage, searchTerm: searchTerm});
   }
 
-  handleDrag(element) {
-    let idx = $(element).data('key');
-    let type = $(element).data('type');
+  handleDrag({idx, type}) {
     let positiveTweets = this.state.positiveTweets;
     let negativeTweets = this.state.negativeTweets;
+    console.log('idx', idx, 'type', type)
     let tweet;
-
     if (type === 'positiveTweets') {
-      $(element).data('type', 'negativeTweets')
       tweet = positiveTweets.splice(idx, 1)[0]
       tweet.score = -tweet.score
       negativeTweets.splice(idx, 0, tweet)
 
     } else if (type === 'negativeTweets') {
       tweet = negativeTweets.splice(idx, 1)[0]
-      $(element).data('type', 'positiveTweets')
       tweet.score = -tweet.score
       positiveTweets.splice(idx, 0, tweet);
     }
@@ -221,5 +217,5 @@ class App extends React.Component {
     }
   }
 }
-// ReactDOM.render(<App/>, document.getElementById('app'));
+
 export default DragDropContext(HTML5Backend)(App)
