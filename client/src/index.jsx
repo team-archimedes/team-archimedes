@@ -21,6 +21,7 @@ import IconButton from 'material-ui/IconButton';
 import ActionNavigationClose from 'material-ui/svg-icons/navigation/close';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import UserModal from './userModal.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -239,6 +240,7 @@ class App extends React.Component {
 
     if (!this.state.loading) {
       if(!this.state.graphMode) {
+
         return (
           <MuiThemeProvider>
           <div className="row">
