@@ -31,6 +31,7 @@ class App extends React.Component {
       graphMode: false, // when user clicks 'view history of ___', changes to true and renders graphDisplay 
       loading: true,
       savedTweets: [],
+      percentages: {left: 0, right: 0}
   	}
     this.getAverage = this.getAverage.bind(this);
     this.getAllTweets = this.getAllTweets.bind(this)
@@ -123,12 +124,12 @@ class App extends React.Component {
     axios.post('/database', {average: newAverage, searchTerm: searchTerm});
   }
 
-  // dragulaDecorator (componentBackingInstance) {
-  //   if (componentBackingInstance) {
-  //     let options = {};
-  //     dragula([componentBackingInstance], options)
-  //   }
-  // }
+  dragulaDecorator (componentBackingInstance) {
+    if (componentBackingInstance) {
+      let options = {};
+      dragula([componentBackingInstance], options)
+    }
+  }
 
   handleDrag(element) {
     let idx = $(element).data('key');
@@ -145,12 +146,11 @@ class App extends React.Component {
       tweet = negativeTweets.splice(idx, 1)[0]
       positiveTweets.splice(idx, 0, tweet);
     }
-    let average = (this.state.negativeTweets.length / this.state.tweets.length) * 100
     this.setState({
       negativeTweets,
       positiveTweets,
-      average,
     }, () => {
+      this.getAverage(this.state.tweets, 'flock')
     })
   }
 
