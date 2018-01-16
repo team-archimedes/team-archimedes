@@ -4,18 +4,19 @@
 //
 ///////////////////////////////////////////////////////////////////
 
-var express = require('express');
-var bodyParser = require('body-parser');
-var request = require('request')
-var app = express();
-var axios = require('axios');
-var db = require('../database/index.js');
-var sentiment = require('sentiment');
-var cron = require('node-cron');
+const express = require('express');
+const bodyParser = require('body-parser');
+const request = require('request')
+const app = express();
+const axios = require('axios');
+const db = require('../database/index.js');
+const sentiment = require('sentiment');
+const cron = require('node-cron');
+const pgDB = require('../database/real-database/config.js')
 
 // helper functions - see helper.js
-var getTweets = require('./helper.js').getTweets; 
-var cronJob = require('./helper.js').cronJob;
+const getTweets = require('./helper.js').getTweets; 
+const cronJob = require('./helper.js').cronJob;
 
 
 cron.schedule('*/30 * * * *', () => {
@@ -23,13 +24,13 @@ cron.schedule('*/30 * * * *', () => {
   cronJob();
 });
 
-var sanitizeHTML = require('sanitize-html')
+const sanitizeHTML = require('sanitize-html')
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.json())
 
 app.post('/search', function(req, res) {
 
-  var searchTerm = sanitizeHTML(req.body.searchTerm) || 'undefined';
+  const searchTerm = sanitizeHTML(req.body.searchTerm) || 'undefined';
   searchTerm.split(`'`).join('').split('#').join('').split('"').join('').split('/').join('').split('`').join('')
 
   db.addToSearchTerms({searchTerm: searchTerm});
@@ -41,8 +42,8 @@ app.post('/search', function(req, res) {
 })
 
 app.post('/database', function(req, res) {
-  var average = req.body.average;
-  var searchTerm = req.body.searchTerm;
+  const average = req.body.average;
+  const searchTerm = req.body.searchTerm;
   if ( average !== null ) {
     db.save({
       searchTerm: searchTerm,

@@ -18,7 +18,6 @@ const tweetsTarget = {
     return item
   },
   drop(props, monitor, component) {
-    // console.log('helo')
     component.props.save(monitor.getItem())
   }
 }

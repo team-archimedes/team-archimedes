@@ -29,8 +29,7 @@ class NegativeTweets extends React.Component {
   constructor(props) {
     super(props);
   }
-
-
+  
   render() {
     const { connectDropTarget } = this.props;
     return connectDropTarget(
