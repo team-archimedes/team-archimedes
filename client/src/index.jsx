@@ -13,6 +13,11 @@ import bodyParser from 'body-parser';
 import sentiment from 'sentiment';
 import styled from 'styled-components';
 import './style/baseStyle.scss';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import Modal from 'react-modal';
+import IconButton from 'material-ui/IconButton';
+import ActionNavigationClose from 'material-ui/svg-icons/navigation/close';
+
 
 class App extends React.Component {
   constructor(props) {
@@ -27,7 +32,9 @@ class App extends React.Component {
       lastSearchTerm: 'flock',
       graphData: [],
       graphMode: false, // when user clicks 'view history of ___', changes to true and renders graphDisplay 
-      loading: true
+      loading: true,
+      clicked: false,
+      clickedUser: ''
   	}
     this.getAverage = this.getAverage.bind(this);
     this.getAllTweets = this.getAllTweets.bind(this)
@@ -36,6 +43,7 @@ class App extends React.Component {
     this.getHistory = this.getHistory.bind(this);
     this.showGraph = this.showGraph.bind(this);
     this.resetGraphMode = this.resetGraphMode.bind(this);
+    this.clickHandler = this.clickHandler.bind(this);
   }
 
   showGraph(e) {
@@ -43,6 +51,16 @@ class App extends React.Component {
     this.setState({
       graphMode: true
     });
+  }
+
+  clickHandler(user) {
+		this.setState({clicked: !this.state.clicked}, () => {
+      this.setState({user: this.state.user})
+    })
+  }
+  
+  closePorfile() {
+
   }
 
   resetGraphMode(e) {
@@ -118,26 +136,102 @@ class App extends React.Component {
     axios.post('/database', {average: newAverage, searchTerm: searchTerm});
   }
 
+
+
   componentWillMount() {
     // default search.
     this.getAllTweets('flock');
   }
 
   render () {
+    const styles = {
+      smallIcon: {
+        width: 36,
+        height: 36,
+      },
+      mediumIcon: {
+        width: 48,
+        height: 48,
+      },
+      largeIcon: {
+        width: 60,
+        height: 60,
+      },
+      small: {
+        width: 72,
+        height: 72,
+        padding: 16,
+      },
+      medium: {
+        width: 96,
+        height: 96,
+        padding: 24,
+      },
+      large: {
+        width: 120,
+        height: 120,
+        padding: 30,
+      },
+      closeButton: {
+        right: "-90%",
+        bottom: 25
+      },
+      content : {
+        position: 'absolute',
+        top: 40,
+        left: 240,
+        right: 240,
+        bottom: 40,
+        border: '1px solid rgb(204, 204, 204)',
+        background: 'rgb(255, 255, 255)',
+        overflow: 'auto',
+        borderRadius: 4,
+        outline: 'none',
+        padding: 20
+      }
+    };
     if (!this.state.loading) {
       if(!this.state.graphMode) {
         return (
+          <MuiThemeProvider>
           <div className="row">
             <div className="siteNav header col col-6-of-6">
               <h1>What the Flock?</h1>
               <img src="./images/poop_logo.png" alt="" className="logo"/>
             </div>
+            <Modal
+              isOpen={this.state.clicked}
+              ariaHideApp={false}
+              // onAfterOpen={afterOpenFn}
+              // onRequestClose={requestCloseFn}
+              // closeTimeoutMS={n}
+              style={styles}
+              contentLabel="Modal" 
+            >
+              <h1>User Profile</h1>
+              <p>
+                Lorem, ipsum dolor sit amet consectetur 
+                adipisicing elit. Deserunt in exercitationem 
+                eius eum soluta qui similique velit. Consequatur 
+                est amet omnis rem? Consequuntur similique tempora 
+                aperiam omnis. Reprehenderit, recusandae 
+                perferendis!
+              </p>
+              <IconButton
+                iconStyle={styles.mediumIcon}
+                style={Object.assign(styles.medium, styles.closeButton)}
+                onClick={this.clickHandler}
+              >
+                <ActionNavigationClose/>
+              </IconButton> 
+            </Modal>
             <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
             <div id="error"></div>
             <BarDisplay percentage={this.state.average} lastSearchTerm={this.state.lastSearchTerm} loading={this.state.loading} showGraph={this.showGraph}/>
-            <NegativeTweets className="tweetColumns row" tweets={this.state.negativeTweets}/>
-            <PositiveTweets className="tweetColumns row" tweets={this.state.positiveTweets}/>
+            <NegativeTweets className="tweetColumns row" clickHandler={this.clickHandler} tweets={this.state.negativeTweets}/>
+            <PositiveTweets className="tweetColumns row" clickHandler={this.clickHandler} tweets={this.state.positiveTweets}/>
           </div>
+          </MuiThemeProvider>
         )
       } else {
         	return (
