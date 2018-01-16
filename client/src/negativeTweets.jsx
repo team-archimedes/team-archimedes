@@ -28,7 +28,7 @@ class NegativeTweets extends React.Component {
             <h3>Negative Tweets</h3>
           </div>
           <div ref={this.dragulaDecorator} id="negative-tweets">
-            {this.props.tweets.map((tweet, i) => <Tweet data={i} type="negativeTweets" key={i} tweet={tweet}/>)}
+            {this.props.tweets.map((tweet, i) => <Tweet data={i} type="negativeTweets" key={i} clickHandler={this.props.clickHandler} tweet={tweet}/>)}
           </div>
         </div>
       </Tweets>
