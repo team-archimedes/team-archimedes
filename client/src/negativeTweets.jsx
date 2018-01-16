@@ -1,28 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 import Tweet from './Tweet.jsx';
-import dragula from 'react-dragula';
+import { DragSource, DropTarget } from 'react-dnd'
 const Tweets = styled.div``;
 
 class NegativeTweets extends React.Component {
   constructor(props) {
     super(props);
-    this.dragulaDecorator = this.dragulaDecorator.bind(this);
   }
 
-  dragulaDecorator (componentBackingInstance, func = this.props.drag) {
-    if (componentBackingInstance) {
-      let options = {};
-      dragula([componentBackingInstance, document.querySelector('.positive-tweets')], options)
-      .on('drop',(el, target, source) => {
-        console.log(componentBackingInstance)
-        if(source === componentBackingInstance && target === document.querySelector('.positive-tweets')) {
-          func(el)
-          
-        }
-      });
-    }
-  }
 
   render() {
     return (
@@ -31,8 +17,8 @@ class NegativeTweets extends React.Component {
           <div className="columnTitle col col-6-of-6">
             <h3>Negative Tweets</h3>
           </div>
-          <div ref={this.dragulaDecorator} className="negative-tweets">
-            {this.props.tweets.map((tweet, i) => <Tweet data={i} type="negativeTweets" key={i} tweet={tweet}/>)}
+          <div>
+            {this.props.tweets.map((tweet, i) => <Tweet id={i} type="negativeTweets" key={i} tweet={tweet}/>)}
           </div>
         </div>
       </Tweets>

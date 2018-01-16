@@ -15,6 +15,8 @@ import styled from 'styled-components';
 import './style/baseStyle.scss';
 import dragula from 'react-dragula';
 import SaveTweet from './saveTweet.jsx';
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
 class App extends React.Component {
   constructor(props) {
@@ -42,7 +44,6 @@ class App extends React.Component {
     this.resetGraphMode = this.resetGraphMode.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
     this.handleSave = this.handleSave.bind(this);
-    this.handleUpdate = this.handleUpdate.bind(this);
   }
 
   showGraph(e) {
@@ -125,14 +126,26 @@ class App extends React.Component {
     axios.post('/database', {average: newAverage, searchTerm: searchTerm});
   }
 
-  dragulaDecorator (componentBackingInstance) {
-    if (componentBackingInstance) {
-      let options = {};
-      dragula([componentBackingInstance], options)
-    }
-  }
+  handleDrag(element) {
+    let idx = $(element).data('key');
+    let type = $(element).data('type');
+    let positiveTweets = this.state.positiveTweets;
+    let negativeTweets = this.state.negativeTweets;
+    let tweet;
 
-  handleUpdate(positiveTweets, negativeTweets) {
+    if (type === 'positiveTweets') {
+      $(element).data('type', 'negativeTweets')
+      tweet = positiveTweets.splice(idx, 1)[0]
+      tweet.score = -tweet.score
+      negativeTweets.splice(idx, 0, tweet)
+
+    } else if (type === 'negativeTweets') {
+      tweet = negativeTweets.splice(idx, 1)[0]
+      $(element).data('type', 'positiveTweets')
+      tweet.score = -tweet.score
+      positiveTweets.splice(idx, 0, tweet);
+    }
+
     this.setState({
       negativeTweets,
       positiveTweets,
@@ -142,38 +155,18 @@ class App extends React.Component {
     })
   }
 
-  handleDrag(element) {
+  handleSave(element, source) {
     let idx = $(element).data('key');
     let type = $(element).data('type');
-    console.log('init type', type)
-    let positiveTweets = this.state.positiveTweets;
-    let negativeTweets = this.state.negativeTweets;
     let tweet;
-
-    if (type === 'positiveTweets') {
-      $(element).data('type', 'negativeTweets')
-      tweet = positiveTweets.splice(idx, 1)[0]
-      console.log('hello')
-      tweet.score = -tweet.score
-      negativeTweets.splice(idx, 0, tweet)
-      return this.handleUpdate(positiveTweets, negativeTweets);
-
-    } else if (type === 'negativeTweets') {
-      tweet = negativeTweets.splice(idx, 1)[0]
-      console.log($(element).data('type'))
-      $(element).data('type', 'positiveTweets')
-      tweet.score = -tweet.score
-      positiveTweets.splice(idx, 0, tweet);
-      return this.handleUpdate(positiveTweets, negativeTweets);
+    if(type === 'positiveTweets') {
+      tweet = positiveTweets.slice(idx, 1);
+    } else {
+      tweet = negativeTweets.slice(idx, 1);
     }
-  }
-
-  handleSave(element) {
-    let idx = $(element).data('key');
-    let tweet = this.state.tweets.slice(idx, 1);
     this.setState({
-      savedTweets: this.state.tweets.concat(tweet),
-    }, ()=> console.log(this.state.savedTweets) )
+      savedTweets: this.state.savedTweets.concat(tweet)
+    }, ()=> console.log(this.state.savedTweets))
   }
 
   componentWillMount() {
@@ -228,5 +221,5 @@ class App extends React.Component {
     }
   }
 }
-
-ReactDOM.render(<App />, document.getElementById('app'));
+// ReactDOM.render(<App/>, document.getElementById('app'));
+export default DragDropContext(HTML5Backend)(App)
