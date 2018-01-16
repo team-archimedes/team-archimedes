@@ -105,24 +105,71 @@ getUserProfileData = (userScreenName, cb) => {
 		'HMAC-SHA1'
 	);
 
+
 	oauth.get(`https://api.twitter.com/1.1/search/show.json?screen_name=${userScreenName}&include_entities=false`, key.ACCESS_TOKEN, key.ACCESS_TOKEN_SECRET, function(e, data, res) {
 		if (e) { 
 			console.error(e);
 			cb([]);
 		} else {
-			//object
+			//last underscore allows me to edit image 
+
 			let userObject = JSON.parse(data)
+
+
+			let { 
+				name,
+				screen_name,
+				description,
+				location,
+				protected,
+				followers_count,
+				friends_count,
+				created_at,
+				favourites_count,
+				verified,
+				statuses_count,
+				profile_image_url_https,
+				profile_banner_url 
+			} = userObject;
+
+
 			//portected here
-			oauth.get(`https://api.twitter.com/1.1/statuses/user_timeline.json?${userScreenName}&count=20&trim_user=trim&exclude_replies=true&include_rts=true`, key.ACCESS_TOKEN, key.ACCESS_TOKEN_SECRET, function(e, data, res) {
+			oauth.get(`https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=${userScreenName}&count=20&trim_user=true&exclude_replies=true&include_rts=true`, key.ACCESS_TOKEN, key.ACCESS_TOKEN_SECRET, function(e, data, res) {
 				if (e) { 
 					console.error(e);
 					cb([]);
 				} else {
 					//array: all 3 default 20 
 					let statuses = JSON.parse(data)
-					//protected usr edge case
+					//protected user edge case
 					//retweets included
+					
+					let {
+						created_at,
+						text,
+						
+					} = statuses;
+	
+
 					oauth.get(`https://api.twitter.com/1.1/followers/list.json?screen_name=${userScreenName}&skip_status=true&include_user_entities=false`, key.ACCESS_TOKEN, key.ACCESS_TOKEN_SECRET, function(e, data, res) {
+						/**
+						 * NO:
+						 * unverified users
+						 */
+						/**
+						 * YES:
+						 * name
+						 * screen_name
+						 * profile_image_url_https
+						 * profile_background_color
+						 * description
+						 */
+						/**
+						 * filter:
+						 * most popular friends ?
+						 * followers_count
+						 * :: increase count and filter for top 5 most poplular friends 
+						 */
 						if (e) { 
 							console.error(e);
 							cb([]);
