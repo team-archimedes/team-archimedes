@@ -7,16 +7,13 @@ const Tweets = styled.div``;
 class PositiveTweets extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      item: null
-    }
     this.dragulaDecorator = this.dragulaDecorator.bind(this);
   }
 
   dragulaDecorator (componentBackingInstance, func = this.props.drag) {
     if (componentBackingInstance) {
       let options = {};
-      dragula([componentBackingInstance, document.querySelector('.negative-tweets'), document.querySelector('.save')], options)
+      dragula([componentBackingInstance, document.querySelector('.negative-tweets')], options)
       .on('drop',(el) => func(el));
     }
   }

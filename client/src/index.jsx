@@ -40,6 +40,7 @@ class App extends React.Component {
     this.showGraph = this.showGraph.bind(this);
     this.resetGraphMode = this.resetGraphMode.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
+    this.handleSave = this.handleSave.bind(this);
   }
 
   showGraph(e) {
@@ -99,24 +100,22 @@ class App extends React.Component {
     });
   }
 
-  getAverage(tweets, searchTerm = 'flock') {
-    if (arguments.length > 1) {
-      tweets.map((message) => {
-        var score = sentiment(message.tweetBody).score;
-        message.score = score;
-        if ( score < 0 ) {
-          // add negative tweets to negativeTweets array
-          this.setState({
-            negativeTweets: [...this.state.negativeTweets, message]
-          });
-        } else if ( score > 0 ) {
-          // add positive tweets to positiveTweets array
-          this.setState({
-            positiveTweets: [...this.state.positiveTweets, message]
-          });
-        }
-      });
-    }
+  getAverage(tweets, searchTerm) {
+    tweets.map((message) => {
+      var score = sentiment(message.tweetBody).score;
+      message.score = score;
+      if ( score < 0 ) {
+        // add negative tweets to negativeTweets array
+        this.setState({
+          negativeTweets: [...this.state.negativeTweets, message]
+        });
+      } else if ( score > 0 ) {
+        // add positive tweets to positiveTweets array
+        this.setState({
+          positiveTweets: [...this.state.positiveTweets, message]
+        });
+      }
+    });
     var newAverage = (this.state.negativeTweets.length / this.state.tweets.length) * 100
     this.setState({
       average: newAverage
@@ -124,28 +123,43 @@ class App extends React.Component {
     axios.post('/database', {average: newAverage, searchTerm: searchTerm});
   }
 
-  dragulaDecorator (componentBackingInstance) {
-    if (componentBackingInstance) {
-      let options = {};
-      dragula([componentBackingInstance], options)
-      .on('drop', () => console.log('drop'));
-    }
-  }
+  // dragulaDecorator (componentBackingInstance) {
+  //   if (componentBackingInstance) {
+  //     let options = {};
+  //     dragula([componentBackingInstance], options)
+  //   }
+  // }
 
   handleDrag(element) {
     let idx = $(element).data('key');
     let type = $(element).data('type');
     let positiveTweets = this.state.positiveTweets;
     let negativeTweets = this.state.negativeTweets;
-    console.log('dropped')
-    console.log(this.state.positiveTweets.length)
-    if(type === 'positiveTweets') {
-      negativeTweets.push(positiveTweets.splice(idx, 1));
+    let tweet;
+    if (type === 'positiveTweets') {
+      $(tweet).data('type', 'negativeTweets')
+      tweet = positiveTweets.splice(idx, 1)[0]
+      negativeTweets.splice(idx, 0, tweet)
+    } else if (type === 'negativeTweets') {
+      $(tweet).data('type', 'positiveTweets')
+      tweet = negativeTweets.splice(idx, 1)[0]
+      positiveTweets.splice(idx, 0, tweet);
     }
+    let average = (this.state.negativeTweets.length / this.state.tweets.length) * 100
     this.setState({
       negativeTweets,
       positiveTweets,
-    }, () => this.getAverage())
+      average,
+    }, () => {
+    })
+  }
+
+  handleSave(element) {
+    let idx = $(element).data('key');
+    let tweet = this.state.tweets.slice(idx, 1);
+    this.setState({
+      savedTweets: this.state.tweets.concat(tweet),
+    }, ()=> console.log(this.state.savedTweets) )
   }
 
   componentWillMount() {
@@ -161,7 +175,7 @@ class App extends React.Component {
             <div className="siteNav header col col-6-of-6">
               <h1>What the Flock?</h1>
               <img src="./images/poop_logo.png" alt="" className="logo"/>
-              <SaveTweet/>
+              <SaveTweet save={this.handleSave} />
             </div>
             <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
             <div id="error"></div>
