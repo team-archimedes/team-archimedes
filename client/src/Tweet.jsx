@@ -8,10 +8,14 @@ const Types = {
 
 const itemSource = {
 	beginDrag(props, monitor, component) {
+		console.log(component)
+		component.props.dragging();
 		const item = {idx: props.id, type: props.type};
 		return item;
 	}, 
 	endDrag(props, monitor, component) {
+
+		component.props.dragging();
 		if (!monitor.didDrop()) {
 			return;
 		}

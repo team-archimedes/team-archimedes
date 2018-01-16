@@ -21,7 +21,7 @@ const tweetsTarget = {
     return item
   },
   drop(props, monitor, component) {
-    component.props.drag(monitor.getItem())
+    component.props.drop(monitor.getItem())
   }
 }
 
@@ -41,7 +41,7 @@ class NegativeTweets extends React.Component {
               <h3>Negative Tweets</h3>
             </div>
             <div>
-              {this.props.tweets.map((tweet, i) => <Tweet id={i} type="negativeTweets" key={i} tweet={tweet}/>)}
+              {this.props.tweets.map((tweet, i) => <Tweet id={i} dragging={this.props.dragging} type="negativeTweets" key={i} tweet={tweet}/>)}
             </div>
           </div>
         </Tweets>

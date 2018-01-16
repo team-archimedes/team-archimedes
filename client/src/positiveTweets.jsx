@@ -22,11 +22,7 @@ const tweetsTarget = {
     return item
   },
   drop(props, monitor, component) {
-    component.props.drag(monitor.getItem())
-    if (!monitor.didDrop()) {
-      return;
-    }
-    const item = monitor.getItem();
+    component.props.drop(monitor.getItem())
   }
 }
 
@@ -34,7 +30,6 @@ class PositiveTweets extends React.Component {
   constructor(props) {
     super(props);
   }
-
   render() {
     const { connectDropTarget } = this.props;
     return connectDropTarget(
@@ -45,7 +40,7 @@ class PositiveTweets extends React.Component {
               <h3>Positive Tweets</h3>
             </div>
             <div>
-              {this.props.tweets.map((tweet, i) => <Tweet id={i} type="positiveTweets" key={i} tweet={tweet} />)}
+              {this.props.tweets.map((tweet, i) => <Tweet id={i} dragging={this.props.dragging} type="positiveTweets" key={i} tweet={tweet} />)}
             </div>
           </div>
         </Tweets>

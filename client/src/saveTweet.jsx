@@ -1,23 +1,38 @@
 import React from 'react';
+import { DropTarget } from 'react-dnd'
 
-export default class SaveTweet extends React.Component {
-  dragulaDecorator (componentBackingInstance, func = this.props.save) {
-    if (componentBackingInstance) {
+const Types = {
+  item: 'tweet'
+}
 
-      let options = {copy: true};
-
-      dragula([componentBackingInstance, document.querySelector('.positive-tweets'), document.querySelector('.negative-tweets')], options)
-      .on('drop',(el, target, source) => {
-        console.log('hello')
-        if(target === componentBackingInstance) {
-          func(el, source)
-        }
-      });
-    }
+const collect = function(connect, monitor) {
+  return {
+    connectDropTarget: connect.dropTarget(),
+    canDrop: monitor.canDrop()
   }
+}
+
+const tweetsTarget = {
+  canDrop(props, monitor) {
+    const item = monitor.getItem();
+    return item
+  },
+  drop(props, monitor, component) {
+    // console.log('helo')
+    component.props.save(monitor.getItem())
+  }
+}
+
+
+class SaveTweet extends React.Component {
   render() {
-    return (
+    const { connectDropTarget } = this.props;
+    return connectDropTarget(
+      <div>
         <img src="./images/folder_icon.png" alt="" className="save"/>
+      </div>
     )
   }
 }
+
+export default DropTarget(Types.item, tweetsTarget, collect)(SaveTweet);

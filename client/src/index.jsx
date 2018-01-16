@@ -33,7 +33,7 @@ class App extends React.Component {
       graphMode: false, // when user clicks 'view history of ___', changes to true and renders graphDisplay 
       loading: true,
       savedTweets: [],
-      percentages: {left: 0, right: 0}
+      isDragging: false,
   	}
     this.getAverage = this.getAverage.bind(this);
     this.getAllTweets = this.getAllTweets.bind(this)
@@ -42,8 +42,9 @@ class App extends React.Component {
     this.getHistory = this.getHistory.bind(this);
     this.showGraph = this.showGraph.bind(this);
     this.resetGraphMode = this.resetGraphMode.bind(this);
-    this.handleDrag = this.handleDrag.bind(this);
+    this.handleDrop = this.handleDrop.bind(this);
     this.handleSave = this.handleSave.bind(this);
+    this.handleDrag = this.handleDrag.bind(this);
   }
 
   showGraph(e) {
@@ -126,10 +127,9 @@ class App extends React.Component {
     axios.post('/database', {average: newAverage, searchTerm: searchTerm});
   }
 
-  handleDrag({idx, type}) {
+  handleDrop({idx, type}) {
     let positiveTweets = this.state.positiveTweets;
     let negativeTweets = this.state.negativeTweets;
-    console.log('idx', idx, 'type', type)
     let tweet;
     if (type === 'positiveTweets') {
       tweet = positiveTweets.splice(idx, 1)[0]
@@ -141,7 +141,6 @@ class App extends React.Component {
       tweet.score = -tweet.score
       positiveTweets.splice(idx, 0, tweet);
     }
-
     this.setState({
       negativeTweets,
       positiveTweets,
@@ -151,22 +150,25 @@ class App extends React.Component {
     })
   }
 
-  handleSave(element, source) {
-    let idx = $(element).data('key');
-    let type = $(element).data('type');
+  handleSave({ idx, type }) {
     let tweet;
     if(type === 'positiveTweets') {
-      tweet = positiveTweets.slice(idx, 1);
+      tweet = this.state.positiveTweets.slice(idx, 1);
     } else {
-      tweet = negativeTweets.slice(idx, 1);
+      tweet = this.state.negativeTweets.slice(idx, 1);
     }
     this.setState({
       savedTweets: this.state.savedTweets.concat(tweet)
     }, ()=> console.log(this.state.savedTweets))
   }
 
+  handleDrag() {
+    this.setState({
+      isDragging: !this.state.isDragging
+    })
+  }
+
   componentWillMount() {
-    // default search.
     this.getAllTweets('flock');
   }
 
@@ -178,13 +180,13 @@ class App extends React.Component {
             <div className="siteNav header col col-6-of-6">
               <h1>What the Flock?</h1>
               <img src="./images/poop_logo.png" alt="" className="logo"/>
-              <SaveTweet save={this.handleSave} />
             </div>
             <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
             <div id="error"></div>
+            <SaveTweet save={this.handleSave} isDraggingging={this.state.isDraggingging}/>
             <BarDisplay percentage={this.state.average} lastSearchTerm={this.state.lastSearchTerm} loading={this.state.loading} showGraph={this.showGraph}/>
-            <NegativeTweets className="tweetColumns row" drag={this.handleDrag} tweets={this.state.negativeTweets}/>
-            <PositiveTweets className="tweetColumns row" drag={this.handleDrag} tweets={this.state.positiveTweets}/>
+            <NegativeTweets className="tweetColumns row" dragging={this.handleDrag} drop={this.handleDrop} tweets={this.state.negativeTweets}/>
+            <PositiveTweets className="tweetColumns row" dragging={this.handleDrag} drop={this.handleDrop} tweets={this.state.positiveTweets}/>
           </div>
         )
       } else {

@@ -21,9 +21,9 @@ cronJob = () => {
 	console.log('cronJob!');
 	
 	db.getAllTermData((res) => {
-  console.log(res)
 	// step one - get all search terms
     res.forEach((term) => {
+      term = term || 'flock';
     // iterate over all search terms
       getTweets(term, (data) => {
       	// get new tweets for each term
