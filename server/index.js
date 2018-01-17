@@ -95,8 +95,22 @@ app.post('/login', (req, res) => {
   })
 })
 
-app.post('/favorite', (req, res) => {
-
+app.post('/favorites', (req, res) => {
+  const { favorite, userId } = req.body;
+  const newFav = new Favorite({ userId, favorite })
+  newFav
+  .fetch()
+  .then(fav => {
+    if(fav) {
+      res.status(200).send(fav)
+    } else {
+      newFav
+      .save()
+      .then(fav => {
+        res.status(200).send(fav)    
+      })
+    }
+  })
 })
 
 app.listen(process.env.PORT || 3000, function() {
