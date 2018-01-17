@@ -21,6 +21,7 @@ import IconButton from 'material-ui/IconButton';
 import ActionNavigationClose from 'material-ui/svg-icons/navigation/close';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import UserModal from './userModal.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -52,6 +53,7 @@ class App extends React.Component {
     this.handleSave = this.handleSave.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
+    this.storeUser = this.storeUser.bind(this);
   }
 
   showGraph(e) {
@@ -167,6 +169,12 @@ class App extends React.Component {
     })
   }
 
+  storeUser(userId) {
+    console.log(userId)
+    // const cookies = new Cookie();
+    // cookies.set('userId', userId);
+  }
+
   handleSave({ idx, type }) {
     let tweet;
     if(type === 'positiveTweets') {
@@ -242,6 +250,7 @@ class App extends React.Component {
         return (
           <MuiThemeProvider>
           <div className="row">
+          <UserModal addUser={this.storeUser}/>
             <div className="siteNav header col col-6-of-6">
               <h1>What the Flock?</h1>
               <img src="./images/poop_logo.png" alt="" className="logo"/>
