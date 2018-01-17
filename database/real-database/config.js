@@ -12,6 +12,7 @@ knex.schema.hasTable('favorites').then(exists => {
     knex.schema.createTable('favorites', (table) => {
       table.increments('id').primary();
       table.integer('userId');
+      table.string('favorite');
     })
     .then(() => console.log('Created favorites'));
   }

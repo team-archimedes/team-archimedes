@@ -184,12 +184,18 @@ class App extends React.Component {
 
   handleSave({ idx, type }) {
     let tweet;
+    const cookies = new Cookies();
     if(type === 'positiveTweets') {
       tweet = this.state.positiveTweets.slice(idx, 1);
     } else {
       tweet = this.state.negativeTweets.slice(idx, 1);
     }
-    // axios.post(
+    const userId = cookies.get('userId')
+    const favorite = tweet.user_name;
+    if (userId) {
+      axios.post('/favorites', {userId, favorite})
+      .then(() => console.log('stored favorite'))
+    }
   }
 
   handleDrag() {
