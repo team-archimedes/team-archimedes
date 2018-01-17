@@ -17,8 +17,9 @@ const User = require('../database/real-database/models/user.js')
 const Favorite = require('../database/real-database/models/favorite.js')
 
 // helper functions - see helper.js
-const getTweets = require('./helper.js').getTweets; 
-const cronJob = require('./helper.js').cronJob;
+var getTweets = require('./helper.js').getTweets; 
+var cronJob = require('./helper.js').cronJob;
+var getUserProfileData = require('./helper.js').getUserProfileData;
 
 
 cron.schedule('*/30 * * * *', () => {
@@ -41,6 +42,13 @@ app.post('/search', function(req, res) {
     res.send(data)
   });
 
+})
+
+app.get('/testUserProfileData', (req, res) => {
+  getUserProfileData('youtube', (data) => {
+    console.log('in')
+    res.send(data)
+  })  
 })
 
 app.post('/database', function(req, res) {
