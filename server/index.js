@@ -73,8 +73,7 @@ app.get('/database', (req, res) => {
 
 app.post('/login', (req, res) => {
   const { username, email } = req.body;
-  let newUser = new User({username, email})
-  newUser
+  new User({username, email})
   .fetch()
   .then(user => {
     if(!user) {
@@ -88,6 +87,10 @@ app.post('/login', (req, res) => {
   .catch(error => {
     res.status(500).send(error);
   })
+})
+
+app.post('/favorite', (req, res) => {
+
 })
 
 app.listen(process.env.PORT || 3000, function() {
