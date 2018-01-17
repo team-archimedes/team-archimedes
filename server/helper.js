@@ -53,6 +53,8 @@ cronJob = () => {
 	
 }
 
+
+
 getTweets = (st, cb) => {
 	var oauth = new OAuth.OAuth(
 		'https://api.twitter.com/oauth/request_token',
@@ -115,7 +117,22 @@ getUserProfileData = (userScreenName, cb) => {
 
 			let userObject = JSON.parse(data)
 
+			//sorting callback function
+			const mostPopularUser = (user_a, user_b) => {
+				if(user_a.followers_count < user_b.followers_count) {
+					return -1
+				} else if(user_a.followers_count > user_b.followers_count) {
+					return 1
+				} else {
+					return 0
+				}
+			}
 
+			const adjustProfileImageSize = (imageUrl, size) => {
+				return imageUrl.split('').reverse().join('').replace(/[a-z\.]*_/, '').split('').reverse().join('') + `_${size}x${size}.jpg`
+			}
+
+			//picking object belows keys off object above
 			let { 
 				name: name,
 				screen_name: screen_name,
@@ -132,8 +149,6 @@ getUserProfileData = (userScreenName, cb) => {
 				profile_banner_url: profile_banner_url,
 			} = userObject;
 
-
-			//portected here
 			oauth.get(`https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=${userScreenName}&count=20&tweet_mode=extended&trim_user=true&exclude_replies=true&include_rts=true`, key.ACCESS_TOKEN, key.ACCESS_TOKEN_SECRET, function(e, data, res) {
 				if (e) { 
 					console.error(e);
@@ -166,23 +181,41 @@ getUserProfileData = (userScreenName, cb) => {
 							let usersFollowers;
 
 							usersFollowers=followers.map((followerInfo) => {
+
+								({ 
+									name,
+									screen_name,
+									description,
+									location,
+									protected,
+									followers_count,
+									friends_count,
+									created_at,
+									favourites_count,
+									verified,
+									statuses_count,
+									profile_image_url_https,
+									profile_banner_url 
+								} = followerInfo);
+
 								let follower = { 
-									name: followerInfo,
-									screen_name: followerInfo,
-									description: followerInfo,
-									location: followerInfo,
-									protected: followerInfo,
-									followers_count: followerInfo,
-									friends_count: followerInfo,
-									created_at: followerInfo,
-									favourites_count: followerInfo,
-									verified: followerInfo,
-									statuses_count: followerInfo,
-									profile_image_url_https: followerInfo,
-									profile_banner_url: followerInfo 
+									name,
+									screen_name,
+									description,
+									location,
+									protected,
+									followers_count,
+									friends_count,
+									created_at,
+									favourites_count,
+									verified,
+									statuses_count,
+									profile_image_url_https,
+									profile_banner_url 
 								}
+								follower.profile_image_url_https = adjustProfileImageSize(profile_image_url_https, 400)
 								return follower
-							})
+							}).sort(mostPopularUser)
 
 							oauth.get(`https://api.twitter.com/1.1/friends/list.json?screen_name=${userScreenName}&skip_status=true&include_user_entities=false`, key.ACCESS_TOKEN, key.ACCESS_TOKEN_SECRET, function(e, data, res) {
 								if (e) { 
@@ -194,24 +227,40 @@ getUserProfileData = (userScreenName, cb) => {
 									let usersFriends;
 
 									usersFriends=friends.map((userFriend) => {
-										let user = { 
-											name: usersFriends,
-											screen_name: usersFriends,
-											description: usersFriends,
-											location: usersFriends,
-											protected: usersFriends,
-											followers_count: usersFriends,
-											friends_count: usersFriends,
-											created_at: usersFriends,
-											favourites_count: usersFriends,
-											verified: usersFriends,
-											statuses_count: usersFriends,
-											profile_image_url_https: usersFriends,
-											profile_banner_url: usersFriends 
-										}
-
-										return user;
-									})
+										({ 
+											name,
+											screen_name,
+											description,
+											location,
+											protected,
+											followers_count,
+											friends_count,
+											created_at,
+											favourites_count,
+											verified,
+											statuses_count,
+											profile_image_url_https,
+											profile_banner_url 
+										} = userFriend)
+										
+										let friend = { 
+											name,
+											screen_name,
+											description,
+											location,
+											protected,
+											followers_count,
+											friends_count,
+											created_at,
+											favourites_count,
+											verified,
+											statuses_count,
+											profile_image_url_https,
+											profile_banner_url 
+										};
+										friend.profile_image_url_https = adjustProfileImageSize(profile_image_url_https, 400)
+										return friend
+									}).sort(mostPopularUser)
 
 									let UserDataObject = { 
 										name: name,
@@ -225,7 +274,7 @@ getUserProfileData = (userScreenName, cb) => {
 										favourites_count: favourites_count,
 										verified: verified,
 										statuses_count: statuses_count,
-										profile_image_url_https: profile_image_url_https,
+										profile_image_url_https: adjustProfileImageSize(profile_image_url_https, 400),
 										profile_banner_url: profile_banner_url,
 										usersFollowers,
 										usersFriends,
