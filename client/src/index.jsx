@@ -22,6 +22,7 @@ import ActionNavigationClose from 'material-ui/svg-icons/navigation/close';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import UserModal from './userModal.jsx';
+import Cookies from 'universal-cookie';
 
 class App extends React.Component {
   constructor(props) {
@@ -41,6 +42,7 @@ class App extends React.Component {
       clicked: false,
       clickedUser: '',
       isDragging: false,
+      authenticated: false,
   	}
     this.getAverage = this.getAverage.bind(this);
     this.getAllTweets = this.getAllTweets.bind(this)
@@ -170,9 +172,14 @@ class App extends React.Component {
   }
 
   storeUser(userId) {
-    console.log(userId)
-    // const cookies = new Cookie();
-    // cookies.set('userId', userId);
+    const cookies = new Cookies();
+    let user = cookies.get('userId')
+    if (!user) {
+      cookies.set('userId', userId);
+      this.setState({
+        authenticated: true
+      }, () => console.log(this.state.authenticated))
+    }
   }
 
   handleSave({ idx, type }) {
@@ -182,9 +189,7 @@ class App extends React.Component {
     } else {
       tweet = this.state.negativeTweets.slice(idx, 1);
     }
-    this.setState({
-      savedTweets: this.state.savedTweets.concat(tweet)
-    }, ()=> console.log(this.state.savedTweets))
+    // axios.post(
   }
 
   handleDrag() {
@@ -195,6 +200,16 @@ class App extends React.Component {
 
   componentWillMount() {
     this.getAllTweets('flock');
+  }
+
+  componentDidMount() {
+    const cookies = new Cookies();
+    let user = cookies.get('userId')
+    if(user) {
+      this.setState({
+        authenticated: true
+      }, () => console.log(this.state.authenticated))
+    }
   }
 
   render () {
@@ -244,13 +259,16 @@ class App extends React.Component {
         padding: 20
       }
     };
-
+    const { authenticated } = this.state;
     if (!this.state.loading) {
       if(!this.state.graphMode) {
         return (
           <MuiThemeProvider>
           <div className="row">
-          <UserModal addUser={this.storeUser}/>
+            { !authenticated ?
+              <UserModal storeUser={this.storeUser}/>:
+              null
+            }
             <div className="siteNav header col col-6-of-6">
               <h1>What the Flock?</h1>
               <img src="./images/poop_logo.png" alt="" className="logo"/>
