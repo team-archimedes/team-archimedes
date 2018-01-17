@@ -56,6 +56,7 @@ class App extends React.Component {
     this.handleDrag = this.handleDrag.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
     this.storeUser = this.storeUser.bind(this);
+    this.handleFaves = this.handleFaves.bind(this);
   }
 
   showGraph(e) {
@@ -184,17 +185,33 @@ class App extends React.Component {
 
   handleSave({ idx, type }) {
     let tweet;
+    const cookies = new Cookies();
     if(type === 'positiveTweets') {
-      tweet = this.state.positiveTweets.slice(idx, 1);
+      tweet = this.state.positiveTweets[idx];
     } else {
-      tweet = this.state.negativeTweets.slice(idx, 1);
+      tweet = this.state.negativeTweets[idx];
     }
-    // axios.post(
+    const userId = cookies.get('userId')
+    const favorite = tweet.user_name;
+    if (userId) {
+      axios.post('/favorites', {userId, favorite})
+      .then((fav) => console.log('stored favorite', fav))
+    }
   }
 
   handleDrag() {
     this.setState({
       isDragging: !this.state.isDragging
+    })
+  }
+
+  handleFaves() {
+    const cookies = new Cookies();
+    axios.get('/favorites', {
+      headers: {'userId': cookies.get('userId')}
+    })
+    .then(response => {
+      console.log('resp', response)
     })
   }
 
@@ -208,7 +225,7 @@ class App extends React.Component {
     if(user) {
       this.setState({
         authenticated: true
-      }, () => console.log(this.state.authenticated))
+      })
     }
   }
 
@@ -297,7 +314,11 @@ class App extends React.Component {
             </Modal>
             <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
             <div id="error"></div>
-            <SaveTweet save={this.handleSave} isDraggingging={this.state.isDraggingging}/>
+            {
+              authenticated ?
+              <SaveTweet save={this.handleSave} handleFaves={this.handleFaves} isDraggingging={this.state.isDraggingging}/>:
+              null
+            }
             <BarDisplay percentage={this.state.average} lastSearchTerm={this.state.lastSearchTerm} loading={this.state.loading} showGraph={this.showGraph}/>
             <NegativeTweets className="tweetColumns row" dragging={this.handleDrag} drop={this.handleDrop} clickHandler={this.clickHandler} tweets={this.state.negativeTweets}/>
             <PositiveTweets className="tweetColumns row" dragging={this.handleDrag} drop={this.handleDrop} clickHandler={this.clickHandler} tweets={this.state.positiveTweets}/>
