@@ -7,3 +7,5 @@ const Favorite = db.Model.extend({
     this.belongsTo(User, 'id');
   }
 })
+
+module.exports = Favorite;

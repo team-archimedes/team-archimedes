@@ -13,6 +13,8 @@ const db = require('../database/index.js');
 const sentiment = require('sentiment');
 const cron = require('node-cron');
 const pgDB = require('../database/real-database/config.js')
+const User = require('../database/real-database/models/user.js')
+const Favorite = require('../database/real-database/models/favorite.js')
 
 // helper functions - see helper.js
 const getTweets = require('./helper.js').getTweets; 
@@ -67,8 +69,26 @@ app.get('/database', (req, res) => {
   db.find(req.query.searchTerm, (results) => {
     res.send(results);
   });
-
 });
+
+app.post('/login', (req, res) => {
+  const { username, email } = req.body;
+  let newUser = new User({username, email})
+  newUser
+  .fetch()
+  .then(user => {
+    if(!user) {
+      newUser.save()
+      .then(info => {
+        res.status(200).send(info);
+      })
+    }
+    res.status(200).send(user);
+  })
+  .catch(error => {
+    res.status(500).send(error);
+  })
+})
 
 app.listen(process.env.PORT || 3000, function() {
   console.log('listening on port 3000!');

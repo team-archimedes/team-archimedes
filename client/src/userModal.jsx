@@ -4,7 +4,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Modal from 'react-modal';
 import { ValidatorForm } from 'react-form-validator-core';
 import { TextValidator} from 'react-material-ui-form-validator';
-import axios form 'axios';
+import axios from 'axios';
 import Cookies from 'universal-cookie';
 
 export default class UserModal extends React.Component {
@@ -31,10 +31,10 @@ export default class UserModal extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    axios.post('/login',{ this.state.user })
+    axios.post('/login', this.state.user)
     .then(response => {
       const cookies = new Cookies();
-      cookies.set('userId', response.userId);
+      console.log(response)
     })
     .catch(error => {
       console.error('There was an error:', error)

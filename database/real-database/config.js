@@ -22,6 +22,7 @@ knex.schema.hasTable('users').then(exists => {
     knex.schema.createTable('users', (table) => {
       table.increments('id').primary();
       table.string('username');
+      table.string('email');
     })
     .then(() => console.log('Created users'))
   }
