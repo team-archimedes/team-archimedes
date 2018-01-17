@@ -56,6 +56,7 @@ class App extends React.Component {
     this.handleDrag = this.handleDrag.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
     this.storeUser = this.storeUser.bind(this);
+    this.handleFaves = this.handleFaves.bind(this);
   }
 
   showGraph(e) {
@@ -192,7 +193,6 @@ class App extends React.Component {
     }
     const userId = cookies.get('userId')
     const favorite = tweet.user_name;
-    console.log(tweet)
     if (userId) {
       axios.post('/favorites', {userId, favorite})
       .then((fav) => console.log('stored favorite', fav))
@@ -202,6 +202,16 @@ class App extends React.Component {
   handleDrag() {
     this.setState({
       isDragging: !this.state.isDragging
+    })
+  }
+
+  handleFaves() {
+    const cookies = new Cookies();
+    axios.get('/favorites', {
+      headers: {'userId': cookies.get('userId')}
+    })
+    .then(response => {
+      console.log('resp', response)
     })
   }
 
@@ -310,7 +320,7 @@ class App extends React.Component {
             <div id="error"></div>
             {
               authenticated ?
-              <SaveTweet save={this.handleSave} isDraggingging={this.state.isDraggingging}/>:
+              <SaveTweet save={this.handleSave} handleFaves={this.handleFaves} isDraggingging={this.state.isDraggingging}/>:
               null
             }
             <BarDisplay percentage={this.state.average} lastSearchTerm={this.state.lastSearchTerm} loading={this.state.loading} showGraph={this.showGraph}/>

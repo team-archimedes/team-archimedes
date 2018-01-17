@@ -12,7 +12,8 @@ const axios = require('axios');
 const db = require('../database/index.js');
 const sentiment = require('sentiment');
 const cron = require('node-cron');
-const pgDB = require('../database/real-database/config.js')
+const pgDB = require('../database/real-database/config.js').db;
+const knex = require('../database/real-database/config.js').knex;
 const User = require('../database/real-database/models/user.js')
 const Favorite = require('../database/real-database/models/favorite.js')
 
@@ -110,6 +111,14 @@ app.post('/favorites', (req, res) => {
         res.status(200).send(fav)    
       })
     }
+  })
+})
+
+app.get('/favorites', (req, res) => {
+  knex.select('favorite').from('favorites')
+  .where('userId', req.headers.userid)
+  .then(result => {
+    res.status(200).send(result)
   })
 })
 

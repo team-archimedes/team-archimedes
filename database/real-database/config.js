@@ -31,4 +31,4 @@ knex.schema.hasTable('users').then(exists => {
 
 const db = require('bookshelf')(knex);
 
-module.exports = db;
+module.exports = {db, knex}
