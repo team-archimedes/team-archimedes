@@ -65,7 +65,7 @@ class App extends React.Component {
 
   clickHandler(user) {
 		this.setState({clicked: !this.state.clicked}, () => {
-      this.setState({user: this.state.user})
+      this.setState({user: this.state.clickedUser})
     })
   }
   
@@ -265,14 +265,6 @@ class App extends React.Component {
               contentLabel="Modal" 
             >
               <h1>User Profile</h1>
-              <p>
-                Lorem, ipsum dolor sit amet consectetur 
-                adipisicing elit. Deserunt in exercitationem 
-                eius eum soluta qui similique velit. Consequatur 
-                est amet omnis rem? Consequuntur similique tempora 
-                aperiam omnis. Reprehenderit, recusandae 
-                perferendis!
-              </p>
               <IconButton
                 iconStyle={styles.mediumIcon}
                 style={Object.assign(styles.medium, styles.closeButton)}
@@ -280,6 +272,10 @@ class App extends React.Component {
               >
                 <ActionNavigationClose/>
               </IconButton> 
+              <a className="twitter-timeline"
+                href={`https://twitter.com/${this.state.clickedUser}`}>
+                Tweets by @{this.state.clickedUser}
+              </a>
             </Modal>
             <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
             <div id="error"></div>
