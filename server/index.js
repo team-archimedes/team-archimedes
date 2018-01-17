@@ -72,8 +72,10 @@ app.get('/database', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
+  console.log('rece')
   const { username, email } = req.body;
-  new User({username, email})
+  const newUser = new User({username, email})
+  newUser
   .fetch()
   .then(user => {
     if(!user) {
@@ -81,17 +83,19 @@ app.post('/login', (req, res) => {
       .then(info => {
         res.status(200).send(info);
       })
+      .catch(err => console.log(err))
     }
     res.status(200).send(user);
   })
   .catch(error => {
+    console.log(error)
     res.status(500).send(error);
   })
 })
 
-app.post('/favorite', (req, res) => {
-  
-})
+// app.post('/favorite', (req, res) => {
+
+// })
 
 app.listen(process.env.PORT || 3000, function() {
   console.log('listening on port 3000!');
