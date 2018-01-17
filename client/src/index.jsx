@@ -53,6 +53,7 @@ class App extends React.Component {
     this.handleSave = this.handleSave.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
+    this.storeUser = this.storeUser.bind(this);
   }
 
   showGraph(e) {
@@ -168,6 +169,12 @@ class App extends React.Component {
     })
   }
 
+  storeUser(userId) {
+    console.log(userId)
+    // const cookies = new Cookie();
+    // cookies.set('userId', userId);
+  }
+
   handleSave({ idx, type }) {
     let tweet;
     if(type === 'positiveTweets') {
@@ -240,11 +247,10 @@ class App extends React.Component {
 
     if (!this.state.loading) {
       if(!this.state.graphMode) {
-
         return (
           <MuiThemeProvider>
           <div className="row">
-          <UserModal/>
+          <UserModal addUser={this.storeUser}/>
             <div className="siteNav header col col-6-of-6">
               <h1>What the Flock?</h1>
               <img src="./images/poop_logo.png" alt="" className="logo"/>

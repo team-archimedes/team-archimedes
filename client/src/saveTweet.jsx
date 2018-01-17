@@ -1,6 +1,5 @@
 import React from 'react';
 import { DropTarget } from 'react-dnd'
-import axios from 'axios';
 
 const Types = {
   item: 'tweet'
@@ -19,11 +18,6 @@ const tweetsTarget = {
     return item
   },
   drop(props, monitor, component) {
-    let item = monitor.getItem()
-    console.log(item)
-    let last = item[item.length - 1];
-    // let username = last.user_name;
-    // console.log(username)
     component.props.save(monitor.getItem())
   }
 }
