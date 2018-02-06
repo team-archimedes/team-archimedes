@@ -7,31 +7,42 @@ class GraphDisplay extends React.Component {
   }
 
   componentDidMount() {
+    console.log(window);
     var time = [];
     var score = [];
-    this.props.data.forEach((entry) => {
-      let d = new Date(entry.searchHour);
-      time.push(d);
-      score.push(100-entry.averageScore);
+    var graph = c3.generate({
+      bindto: '#Graph',
+      data: {
+        columns: [
+          ['data1', 30, 200, 100, 400, 150, 250],
+          ['data2', 50, 20, 10, 40, 15, 25]
+        ]
+      }
     });
-    var trace = {
-      x: time,
-      y: score,
-      type: 'scatter',
-      connectgaps: true
-    };
 
-    var layout = {
-      title: 'positivity ratio of ' + this.props.term + ' over time',
-      yaxis: {
-        range: [0, 100]
-      },
 
-    }
+    // this.props.data.forEach((entry) => {
+    //   let d = new Date(entry.searchHour);
+    //   time.push(d);
+    //   score.push(100-entry.averageScore);
+    // });
+    // var trace = {
+    //   x: time,
+    //   y: score,
+    //   type: 'scatter'
+    // };
 
-    var data = [trace];
+    // var layout = {
+    //   title: 'positivity ratio of ' + this.props.term + ' over time',
+    //   yaxis: {
+    //     range: [0, 100]
+    //   },
 
-    Plotly.newPlot('Graph', data, layout);
+    // }
+
+    // var data = [trace];
+
+    // Plotly.newPlot('Graph', data, layout);
   }
 
 
