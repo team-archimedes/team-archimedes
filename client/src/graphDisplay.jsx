@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+var moment = require('moment');
 
 class GraphDisplay extends React.Component {
   constructor(props) {
@@ -7,42 +8,40 @@ class GraphDisplay extends React.Component {
   }
 
   componentDidMount() {
-    console.log(window);
-    var time = [];
-    var score = [];
+    // come back and make this look better later - for now, not displaying timestamp, just score
+    var x = ['x'];
+    var score = ['score'];
+    this.props.data.forEach((entry) => {
+      // let d = moment(entry.searchHour).format('MM-DD-YY');
+      // console.log('timestamp: ', entry.searchHour);
+      if(entry.searchHour) {
+        x.push(entry.searchHour);
+      }
+      score.push(100-entry.averageScore);
+    });
     var graph = c3.generate({
       bindto: '#Graph',
+      title: {
+        text: "positivity score of "+this.props.term+" over time"
+      },
       data: {
+        // x: 'x',
+        // xFormat: '%d',
         columns: [
-          ['data1', 30, 200, 100, 400, 150, 250],
-          ['data2', 50, 20, 10, 40, 15, 25]
+          // x,
+          score
         ]
-      }
+      },
+
+      // axis: {
+      //   x: {
+      //     type: 'timeseries',
+      //     tick: {
+      //       format: '%d'
+      //     }
+      //   }
+      // }
     });
-
-
-    // this.props.data.forEach((entry) => {
-    //   let d = new Date(entry.searchHour);
-    //   time.push(d);
-    //   score.push(100-entry.averageScore);
-    // });
-    // var trace = {
-    //   x: time,
-    //   y: score,
-    //   type: 'scatter'
-    // };
-
-    // var layout = {
-    //   title: 'positivity ratio of ' + this.props.term + ' over time',
-    //   yaxis: {
-    //     range: [0, 100]
-    //   },
-
-    // }
-
-    // var data = [trace];
-
-    // Plotly.newPlot('Graph', data, layout);
   }
 
 

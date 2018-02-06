@@ -24,7 +24,7 @@ class App extends React.Component {
       previousSearches: [],
       average: 50,
       searchTerm: '',
-      lastSearchTerm: 'flock',
+      lastSearchTerm: 'trump',
       graphData: [],
       graphMode: false, // when user clicks 'view history of ___', changes to true and renders graphDisplay 
       loading: true
@@ -137,7 +137,7 @@ class App extends React.Component {
 
   componentWillMount() {
     // default search.
-    this.getAllTweets('flock');
+    this.getAllTweets('trump');
   }
 
   render () {
@@ -146,8 +146,7 @@ class App extends React.Component {
         return (
           <div className="row">
             <div className="siteNav header col col-6-of-6">
-              <h1>What the Flock?</h1>
-              <img src="./images/poop_logo.png" alt="" className="logo"/>
+              <h1>The Sentimentalyzer</h1>
             </div>
             <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
             <div id="error"></div>
@@ -160,8 +159,7 @@ class App extends React.Component {
         	return (
             <div className="row">
               <div className="siteNav header col col-6-of-6">
-                <h1>What the Flock?</h1>
-                <img src="./images/poop_logo.png" alt="" className="logo"/>
+                <h1>The Sentimentalyzer</h1>
               </div>
               <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
               <div id="error"></div>
@@ -174,8 +172,7 @@ class App extends React.Component {
       return(
         <div className="row">
         <div className="siteNav header col col-6-of-6">
-          <h1>What the Flock?</h1>
-          <img src="./images/poop_logo.png" alt="" className="logo"/>
+          <h1>The Sentimentalyzer</h1>
         </div>
         <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
         <div id="error"></div>
