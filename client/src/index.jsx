@@ -146,7 +146,7 @@ class App extends React.Component {
         return (
           <div className="row">
             <div className="siteNav header col col-6-of-6">
-              <h1>The Sentimentalyzer</h1>
+              <h1>Flock</h1>
             </div>
             <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
             <div id="error"></div>
@@ -159,7 +159,7 @@ class App extends React.Component {
         	return (
             <div className="row">
               <div className="siteNav header col col-6-of-6">
-                <h1>The Sentimentalyzer</h1>
+                <h1>Flock</h1>
               </div>
               <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
               <div id="error"></div>
@@ -172,7 +172,7 @@ class App extends React.Component {
       return(
         <div className="row">
         <div className="siteNav header col col-6-of-6">
-          <h1>The Sentimentalyzer</h1>
+          <h1>Flock</h1>
         </div>
         <Search submitQuery={this.submitQuery} searchTerm={this.state.searchTerm} getAllTweets={this.getAllTweets} handleInputChange={this.handleInputChange}/>
         <div id="error"></div>
