@@ -6,11 +6,11 @@ npm run react-dev
 ## Run
 npm run server-dev
 ### Built With:
-*React
-*Node.js
-*Express.js
-*Mongoose
-*Twitter API
-*Sass
+- React
+- Node.js
+- Express.js
+- Mongoose
+- Twitter API
+- Sass
 ### Demo
 Check out a live demo [here](heroku link...)
